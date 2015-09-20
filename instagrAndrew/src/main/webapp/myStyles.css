@@ -1,0 +1,50 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 16-Sep-2015, 11:23:38
+    Author     : Andrew
+*/
+
+header{
+    margin: 15px;
+}
+
+body{
+    background-color: #e7d99e;
+    color: #3b3a42;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+nav{
+    background-color: #69503c;
+    color: white;
+    list-style-type: none;
+    margin: 15px;
+    height: 30px;
+}
+
+a {
+    color: white;
+    font-size: 1.25em;
+    padding: 20px;
+}
+
+a:click{
+    color:white;
+}
+
+a:visited{
+    color:white;
+}
+
+a:hover{
+    color: lightsteelblue;
+}
+
+li {
+    display: inline;
+    color: white;
+}
