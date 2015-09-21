@@ -7,5 +7,6 @@ uk\ac\dundee\computing\aec\instagrAndrew\models\User.class
 uk\ac\dundee\computing\aec\instagrAndrew\stores\LoggedIn.class
 uk\ac\dundee\computing\aec\instagrAndrew\stores\Pic.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\Register.class
+.netbeans_automatic_build
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\Image.class
 uk\ac\dundee\computing\aec\instagrAndrew\lib\Convertors.class

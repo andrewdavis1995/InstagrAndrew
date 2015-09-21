@@ -11,6 +11,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>InstagrAndrew</title>
         <link rel="stylesheet" type="text/css" href="myStyles.css" />
+        
+        <script type="text/javascript"> 
+            
+            <%--javascript code adapted from:--%>
+            <%--http://stackoverflow.com/questions/15231812/random-background-images-css3--%>
+                
+            function ChangeBackGround() 
+            {
+            var num = Math.ceil( Math.random() * 3 );
+            document.body.background = 'developmentImages/'+num+'.JPG';
+            }
+        </script>
     </head>
     <body>
         <h1>InstagrAndrew ! </h1>
@@ -37,5 +49,10 @@
                 <li class="footer"><a href="/InstagrAndrew">Home</a></li>
             </ul>
         </footer>
+        
+        <script type="text/javascript"> 
+            ChangeBackGround();
+        </script> 
+        
     </body>
 </html>

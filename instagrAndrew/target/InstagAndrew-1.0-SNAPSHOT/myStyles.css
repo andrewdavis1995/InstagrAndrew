@@ -8,28 +8,38 @@ and open the template in the editor.
     Author     : Andrew
 */
 
-header{
-    margin: 15px;
+footer{
+    top: 90%;
+    position: fixed;
+    float: right;
+    color: white;
 }
 
 body{
+    margin-top: 80px;
+    margin-left: 40px;
     background-color: #e7d99e;
-    color: #3b3a42;
+    color: white;
     font-family: "Trebuchet MS", Helvetica, sans-serif;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 nav{
-    background-color: #69503c;
+    background-color: black;
     color: white;
     list-style-type: none;
-    margin: 15px;
-    height: 30px;
+    height: 65px;
+    width: 100%;
+    vertical-align: middle;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 a {
     color: white;
-    font-size: 1.25em;
-    padding: 20px;
+    font-size: 1.1em;
 }
 
 a:click{
@@ -45,6 +55,12 @@ a:hover{
 }
 
 li {
+    margin-left: 80px;
+    width: 90px;
     display: inline;
     color: white;
+}
+
+h1{
+    font-size: 1.7em;
 }
