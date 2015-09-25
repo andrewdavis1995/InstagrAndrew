@@ -11,29 +11,29 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        
-        <script type="text/javascript"> 
-            
-            <%--javascript code adapted from:--%>
-            <%--http://stackoverflow.com/questions/15231812/random-background-images-css3--%>
+        <link rel="stylesheet" type="text/css" href="secondStyles.css" />
                 
-            function ChangeBackGround() 
-            {
-            var num = Math.ceil( Math.random() * 3 );
-            document.body.background = 'developmentImages/'+num+'.JPG';
-            }
-        </script>
-        
     </head>
+    
     <body>
-        <h1>Hello World!</h1>
-        <%
-            Pic ps = new Pic();
-            LoggedIn lg = new LoggedIn();
-            %>
-            
-            <script type="text/javascript"> 
-            ChangeBackGround();
-        </script> 
+        <div id="nav">
+            <div id="nav-wrapper">
+                <ul>
+                    <li><a href="#">item #1</a></li>
+                    <li><a href="#">item #2</a></li>
+                    <li><a href="#">item #3</a></li>
+                    <li><a href="#">item #4</a></li>
+                    <li><a href="#">item #5</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="wrapper">
+            <div id="content">
+                <h3>This is a heading!</h3>
+                <p>You're learning how to create a fixed horizontal navigation menu!</p>
+            </div>
+        </div>
+        
     </body>
 </html>

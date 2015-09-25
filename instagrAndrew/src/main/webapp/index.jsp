@@ -13,19 +13,7 @@
     <head>
         <link rel="stylesheet" type="text/css" href="myStyles.css" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
-        <script type="text/javascript"> 
-            
-            <%--javascript code adapted from:--%>
-            <%--http://stackoverflow.com/questions/15231812/random-background-images-css3--%>
-                
-            function ChangeBackGround() 
-            {
-            var num = Math.ceil( Math.random() * 3 );
-            document.body.background = 'developmentImages/'+num+'.JPG';
-            }
-        </script>
-        
+               
     </head>
     
     <nav>
@@ -34,12 +22,12 @@
                 <li><a href="upload.jsp">Upload</a></li>
                     <%
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
-                            
+
                         if (lg != null) {
                             String UserName = lg.getUsername();
                             if (lg.getlogedin()) {
                     %>
-            
+
             <li><a href="/InstagrAndrew/Images/<%=lg.getUsername()%>">Your Images</a></li>
                 <%}
                         }else{
@@ -54,7 +42,7 @@
     </nav>
     
     
-    <body>
+    <body background="developmentImages/1.JPG">
         
         <header>
             <h1 style="display: inline; padding: 10px">InstagrAndrew!</h1>
@@ -66,10 +54,5 @@
                 <h5>&COPY; Andrew Davis</h5>
             </ul>
         </footer>
-        
-        <script type="text/javascript"> 
-            ChangeBackGround();
-        </script> 
-        
     </body>
 </html>

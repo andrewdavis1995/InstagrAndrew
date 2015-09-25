@@ -16,18 +16,6 @@
         <header>
             <h1>InstagrAndrew ! </h1>
             <h2>Your world in Black and White</h2>
-
-            <script type="text/javascript"> 
-            
-                <%--javascript code adapted from:--%>
-                <%--http://stackoverflow.com/questions/15231812/random-background-images-css3--%>
-
-                function ChangeBackGround() 
-                {
-                var num = Math.ceil( Math.random() * 3 );
-                document.body.background = 'developmentImages/'+num+'.JPG';
-                }
-            </script>
         </header>
         <nav>
             <ul>
@@ -53,10 +41,6 @@
                 <li class="footer"><a href="/InstagrAndrew">Home</a></li>
             </ul>
         </footer>
-            
-            <script type="text/javascript"> 
-            ChangeBackGround();
-        </script> 
-            
+                        
     </body>
 </html>

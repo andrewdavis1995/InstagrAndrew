@@ -126,7 +126,7 @@ public class PicModel {
         return pad(img, 2);
     }
     
-   public static BufferedImage createProcessed(BufferedImage img) {
+    public static BufferedImage createProcessed(BufferedImage img) {
         int Width=img.getWidth()-1;
         img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
         return pad(img, 4);

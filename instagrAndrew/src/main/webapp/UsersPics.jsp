@@ -13,15 +13,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>InstagrAndrew</title>
         <link rel="stylesheet" type="text/css" href="/InstagrAndrew/myStyles.css" />
-        
-        <script type="text/javascript"> 
-            function ChangeIt() 
-            {
-            var num = Math.ceil( Math.random() * 3 );
-            document.body.background = 'developmentImages/'+num+'.JPG';
-            }
-        </script>
-        
+                
     </head>
     <body>
         <header>
@@ -63,10 +55,6 @@
                 <li class="footer"><a href="/InstagrAndrew">Home</a></li>
             </ul>
         </footer>
-        
-        <script type="text/javascript"> 
-            ChangeBackGround();
-        </script> 
         
     </body>
 </html>

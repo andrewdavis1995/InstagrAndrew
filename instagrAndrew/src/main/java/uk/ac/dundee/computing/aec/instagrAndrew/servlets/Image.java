@@ -160,7 +160,7 @@ public class Image extends HttpServlet {
 
         PrintWriter out = null;
         out = new PrintWriter(response.getOutputStream());
-        out.println("<h1>You have a na error in your input</h1>");
+        out.println("<h1>You have a an error in your input</h1>");
         out.println("<h2>" + mess + "</h2>");
         out.close();
         return;

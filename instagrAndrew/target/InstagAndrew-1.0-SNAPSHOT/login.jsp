@@ -13,23 +13,11 @@
         <link rel="stylesheet" type="text/css" href="myStyles.css" />
 
     </head>
-    <body>
+    <body background="developmentImages/3.JPG" style = "color: black">
         <header>
         <h1>InstagrAndrew ! </h1>
-        <h2>Your world in Black and White</h2>
-        
-        <script type="text/javascript"> 
-            
-            <%--javascript code adapted from:--%>
-            <%--http://stackoverflow.com/questions/15231812/random-background-images-css3--%>
+        <h3>LOGIN</h3>
                 
-            function ChangeBackGround() 
-            {
-            var num = Math.ceil( Math.random() * 3 );
-            document.body.background = 'developmentImages/'+num+'.JPG';
-            }
-        </script>
-        
         </header>
         <nav>
             <ul>
@@ -39,10 +27,9 @@
         </nav>
        
         <article>
-            <h3>Login</h3>
             <form method="POST"  action="Login">
                 <ul>
-                    <li>User Name <input type="text" name="username"></li>
+                    <li style = "margin-left: 0; padding-left: 0;">User Name <input type="text" name="username"></li>
                     <li>Password <input type="password" name="password"></li>
                 </ul>
                 <br/>
@@ -56,9 +43,6 @@
             </ul>
         </footer>
         
-        <script type="text/javascript"> 
-            ChangeBackGround();
-        </script> 
         
     </body>
 </html>
