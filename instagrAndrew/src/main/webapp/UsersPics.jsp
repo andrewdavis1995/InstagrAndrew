@@ -16,45 +16,64 @@
                 
     </head>
     <body>
-        <header>
-        
-        <h1>InstagrAndrew ! </h1>
-        <h2>Your world in Black and White</h2>
-        </header>
         
         <nav>
             <ul>
+                <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
                 <li class="nav"><a href="/InstagrAndrew/upload.jsp">Upload</a></li>
                 <li class="nav"><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
  
         <article>
-            <h1>Your Pics</h1>
+            
+            
+        <%
+            LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+
+            String search = request.getParameter("search");
+            String type = request.getParameter("type");
+            
+            if (lg != null) {
+                
+                if(type != "" && search != ""){
+                
+                    if(type.equals("other")){
+
+                    %> 
+                        <h1> <%= search %>'s Pictures </h1>
+                    <%
+                    }else{
+                        %>
+                        <h1> Your Pictures </h1>
+                        <%
+                    }
+                }
+            }
+        %>
+            
+            
         <%
             java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("Pics");
             if (lsPics == null) {
         %>
-        <p>No Pictures found</p>
+                <p>No Pictures found</p>
         <%
-        } else {
-            Iterator<Pic> iterator;
-            iterator = lsPics.iterator();
-            while (iterator.hasNext()) {
-                Pic p = (Pic) iterator.next();
+            } else {
+                Iterator<Pic> iterator;
+                iterator = lsPics.iterator();
+                while (iterator.hasNext()) {
+                    Pic p = (Pic) iterator.next();
 
         %>
         <a href="/InstagrAndrew/Image/<%=p.getSUUID()%>" ><img src="/InstagrAndrew/Thumb/<%=p.getSUUID()%>"></a><br/><%
 
+                }
             }
-            }
+        
         %>
+        
         </article>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/InstagrAndrew">Home</a></li>
-            </ul>
-        </footer>
         
     </body>
 </html>

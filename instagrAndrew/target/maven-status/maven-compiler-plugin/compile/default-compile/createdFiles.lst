@@ -1,8 +1,0 @@
-uk\ac\dundee\computing\aec\instagrAndrew\lib\CassandraHosts.class
-uk\ac\dundee\computing\aec\instagrAndrew\servlets\Login.class
-uk\ac\dundee\computing\aec\instagrAndrew\models\PicModel.class
-uk\ac\dundee\computing\aec\instagrAndrew\lib\Keyspaces.class
-uk\ac\dundee\computing\aec\instagrAndrew\models\User.class
-uk\ac\dundee\computing\aec\instagrAndrew\stores\LoggedIn.class
-uk\ac\dundee\computing\aec\instagrAndrew\servlets\Register.class
-uk\ac\dundee\computing\aec\instagrAndrew\servlets\Image.class

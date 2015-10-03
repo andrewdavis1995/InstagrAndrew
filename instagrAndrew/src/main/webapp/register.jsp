@@ -12,35 +12,29 @@
         <title>InstagrAndrew</title>
         <link rel="stylesheet" type="text/css" href="myStyles.css" />
     </head>
-    <body>
-        <header>
-            <h1>InstagrAndrew ! </h1>
-            <h2>Your world in Black and White</h2>
-        </header>
+    
+    <body background="developmentImages/2.JPG" style = "background-position: center;">
         <nav>
             <ul>
-                
+                <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
                 <li><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
-       
-        <article>
-            <h3>Register as user</h3>
+
+        
+        <div style = "background-image: url('developmentImages/login background.png'); margin-left: 1%; width: 300px; height: 250px; margin-top: 4%">
             <form method="POST"  action="Register">
                 <ul>
-                    <li>User Name <input type="text" name="username"></li>
-                    <li>Password <input type="password" name="password"></li>
+                    <br>
+                    <h3 style="color: white;">REGISTER:</h3>
+                    <br><li style="margin-left: 15px; padding-bottom: 15px;">User Name <input type="text" name="username"></li><br>
+                    <li style="margin-left: 26px; padding-top: 15px;">Password <input type="password" name="password"></li>
                 </ul>
                 <br/>
-                <input type="submit" value="Register"> 
+                <input type="submit" value="Register" style="margin-left: 15px; margin-bottom: 15px;"> 
             </form>
-
-        </article>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/InstagrAndrew">Home</a></li>
-            </ul>
-        </footer>
+        </div>
+        
                         
     </body>
 </html>

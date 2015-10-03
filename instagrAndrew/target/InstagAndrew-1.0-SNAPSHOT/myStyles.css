@@ -8,6 +8,89 @@ and open the template in the editor.
     Author     : Andrew
 */
 
+@keyframes cycle {
+   0% { opacity: 1; }
+   10% { opacity: 1; }
+   25% { opacity: 1; }
+   33%{ opacity: 1; }
+   34% { opacity: 0; }
+   94% { opacity: 0; }
+   100%{ opacity: 1; }
+}
+
+@keyframes cycletwo {
+   0% { opacity: 0; }
+   25% { opacity: 0; }
+   34% { opacity: 1; }
+   40% { opacity: 1; }
+   56% { opacity: 1; }
+   66% { opacity: 1; }
+   67% { opacity: 0; }
+   100%{ opacity: 0; }
+}
+
+@keyframes cyclethree {
+   0% { opacity: 0; }
+   56% { opacity: 0; }
+   67% { opacity: 1; }
+   75% { opacity: 1; }
+   84% { opacity: 1; }
+   96% { opacity: 1; }
+   100%{ opacity: 0; }
+}
+
+#slider ul {
+   margin: 0;
+   padding: 0;
+   position: relative;
+}
+
+#slider img.firstanimation {
+   animation: cycle 25s linear infinite;
+}
+
+#slider img.secondanimation {
+   animation: cycletwo 25s linear infinite;
+}
+
+#slider img.thirdanimation {
+   animation: cyclethree 25s linear infinite;
+}
+
+
+#slider img {
+   width: 400px;  /* Width Image */
+   height: 250px; /* Height Image */
+   position: absolute;
+   list-style: none;
+}
+
+
+#slider {
+   background: #000;
+   box-shadow: 0px 8px 5px black;
+   height: 250px;
+   width: 400px;
+   position: relative;
+   left: 5%;
+   top: 59px;
+}
+
+#mask {
+   overflow: hidden;
+   height: 320px;
+}
+
+
+
+loginBack{
+    background-image: url("developmentImages/login background.png");
+    left: 40%;
+    height: 20%;
+    width: 30%;
+}
+
+
 footer{
     top: 90%;
     position: fixed;
@@ -40,6 +123,10 @@ nav{
 a {
     color: white;
     font-size: 1.1em;
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in;
+    transition-delay: 0s;
 }
 
 a:click{
@@ -53,6 +140,7 @@ a:visited{
 a:hover{
     color: lightsteelblue;
 }
+
 
 li {
     margin-left: 80px;

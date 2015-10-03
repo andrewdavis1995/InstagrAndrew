@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import static org.imgscalr.Scalr.*;
+import java.awt.Color;
 import org.imgscalr.Scalr.Method;
 
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.*;
@@ -51,6 +52,7 @@ public class PicModel {
     }
 
     public void insertPic(byte[] b, String type, String name, String user) {
+                
         try {
             Convertors convertor = new Convertors();
 
@@ -129,7 +131,7 @@ public class PicModel {
     public static BufferedImage createProcessed(BufferedImage img) {
         int Width=img.getWidth()-1;
         img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
-        return pad(img, 4);
+        return pad(img, 4);    
     }
    
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
@@ -168,7 +170,6 @@ public class PicModel {
             PreparedStatement ps = null;
          
             if (image_type == Convertors.DISPLAY_IMAGE) {
-                
                 ps = session.prepare("select image,imagelength,type from pics where picid =?");
             } else if (image_type == Convertors.DISPLAY_THUMB) {
                 ps = session.prepare("select thumb,imagelength,thumblength,type from pics where picid =?");

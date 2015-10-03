@@ -13,6 +13,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.security.NoSuchAlgorithmException;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.AeSimpleSHA1;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
@@ -79,9 +80,35 @@ public class User {
     
     return false;  
     }
-       public void setCluster(Cluster cluster) {
+    
+    public void setCluster(Cluster cluster) {
         this.cluster = cluster;
     }
 
-    
+    public ArrayList<String> getMatchingUsers(String name){
+        ArrayList<String> profileList = new ArrayList<String>();
+                
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("select login from userprofiles LIMIT 2000");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute(boundStatement);
+        if (rs.isExhausted()) {
+            System.out.println("No Images returned");
+            return new ArrayList<String>();
+        } else {
+            for (Row row : rs) {
+               
+                String username = row.getString("login");
+                if (username.toLowerCase().contains(name.toLowerCase())){
+                    profileList.add(username);
+                }
+                    
+            }
+        }
+        
+        
+        return profileList;
+    }
+       
 }
