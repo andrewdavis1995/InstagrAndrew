@@ -13,6 +13,9 @@
         <title>JSP Page</title>
     </head>
     
+    
+    <body>
+              
     <nav>
         <ul>
             <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
@@ -20,9 +23,7 @@
             <li class="nav"><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
         </ul>
     </nav>
-    
-    <body>
-               
+        
         <% 
             String searchedFor = (String)request.getAttribute("searchedText");
             ArrayList<String> profiles = (ArrayList<String>)request.getAttribute("matches");
@@ -33,7 +34,7 @@
                     String path = "/InstagrAndrew/Images/" + profiles.get(i) + "?type=other&search=" + profiles.get(i);
         %>
         
-                    <li><a href = <%= path %> > <%= profiles.get(i) %></a></li>
+                    <li style="display: list-item"><a href = <%= path %> > <%= profiles.get(i) %></a></li>
 
         <%
                 }

@@ -38,7 +38,7 @@
                 
                 if(type != "" && search != ""){
                 
-                    if(type.equals("other")){
+                    if(type.equals("other") && !search.equals(lg.getUsername())){
 
                     %> 
                         <h1> <%= search %>'s Pictures </h1>

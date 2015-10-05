@@ -19,6 +19,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.utils.Bytes;
+import com.sun.corba.se.spi.presentation.rmi.StubAdapter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,6 +43,8 @@ import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
 public class PicModel {
 
     Cluster cluster;
+    float tintValue;
+    float greyValue;
 
     public void PicModel() {
 
@@ -50,9 +53,39 @@ public class PicModel {
     public void setCluster(Cluster cluster) {
         this.cluster = cluster;
     }
+    
+    public void setTint(String t){
+        
+        switch (t) {
+            case "Red":
+                this.tintValue = 0f;
+                break;
+            case "Blue":
+                this.tintValue = 0.56f;
+                break;
+            case "Yellow":
+                this.tintValue = 0.16f;
+                break;
+            case "Green":
+                this.tintValue = 0.33f;
+                break;
+            default:
+                this.tintValue = -1;
+                break;
+        }
+        
+    }
+    
+    public void setGrey(String g){
+        if(g.equals("On")){
+            this.greyValue = 0f;
+        }else{
+            this.greyValue = -1;
+        }
+    }
 
     public void insertPic(byte[] b, String type, String name, String user) {
-                
+             
         try {
             Convertors convertor = new Convertors();
 
@@ -92,7 +125,7 @@ public class PicModel {
     public byte[] picresize(String picid,String type) {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrAndrew/" + picid));
-            BufferedImage thumbnail = createThumbnail(BI);
+            BufferedImage thumbnail = doTints(BI, this.tintValue, this.greyValue, true);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(thumbnail, type, baos);
             baos.flush();
@@ -109,7 +142,7 @@ public class PicModel {
     public byte[] picdecolour(String picid,String type) {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrAndrew/" + picid));
-            BufferedImage processed = createProcessed(BI);
+            BufferedImage processed = doTints(BI, this.tintValue, this.greyValue, false);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(processed, type, baos);
             baos.flush();
@@ -122,17 +155,63 @@ public class PicModel {
         return null;
     }
 
-    public static BufferedImage createThumbnail(BufferedImage img) {
-        img = resize(img, Method.SPEED, 250, OP_ANTIALIAS, OP_GRAYSCALE);
+    //public static BufferedImage createThumbnail(BufferedImage img) {
+        //img = resize(img, Method.SPEED, 250, OP_ANTIALIAS, OP_GRAYSCALE);
         // Let's add a little border before we return result.
-        return pad(img, 2);
+        //return pad(img, 2);
+    //}
+    
+    
+    public static BufferedImage doTints(BufferedImage img, float tint, float grey, boolean thumb){
+        
+        int WIDTH = img.getWidth();
+        int HEIGHT = img.getHeight();
+       
+        for (int x = 0; x < WIDTH; ++x){
+            for (int y = 0; y < HEIGHT; ++y)
+            {
+                Color c = new Color(img.getRGB(x, y));
+                int red = c.getRed();
+                int green = c.getGreen();
+                int blue = c.getBlue();
+               
+                float[] hsb = new float[3];
+                c.RGBtoHSB(red, green, blue, hsb);
+                
+                if(tint != -1){
+                    hsb[0] = tint;            // change this to change the tint
+                }
+                
+                if(grey != -1){
+                    hsb[1] = grey;         // change this to change the greyscale
+                }
+                int rgb;
+                
+                rgb = c.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
+                
+                img.setRGB(x, y, rgb);
+                
+            }
+        }
+        
+        
+        if(thumb){
+            img = resize(img, Method.SPEED, 250, null, null);
+            return pad(img, 2);
+        }else{
+            return pad(img, 4);
+        }
+        
+        
+        
     }
     
-    public static BufferedImage createProcessed(BufferedImage img) {
-        int Width=img.getWidth()-1;
-        img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
-        return pad(img, 4);    
-    }
+    
+    //public static BufferedImage createProcessed(BufferedImage img) {
+        //int Width=img.getWidth()-1;
+        //img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
+        //return pad(img, 4);    
+    //}
    
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
         java.util.LinkedList<Pic> Pics = new java.util.LinkedList<>();

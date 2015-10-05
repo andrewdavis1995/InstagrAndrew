@@ -134,33 +134,40 @@ public class Image extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        
         for (Part part : request.getParts()) {
             System.out.println("Part Name " + part.getName());
 
             String type = part.getContentType();
-            String filename = part.getSubmittedFileName();
-            
-            InputStream is = request.getPart(part.getName()).getInputStream();
-            int i = is.available();
-            HttpSession session=request.getSession();
-            LoggedIn lg= (LoggedIn)session.getAttribute("LoggedIn");
-            String username="majed";
-            if (lg.getlogedin()){
-                username=lg.getUsername();
-            }
-            if (i > 0) {
-                byte[] b = new byte[i + 1];
-                is.read(b);
-                System.out.println("Length : " + b.length);
-                PicModel tm = new PicModel();
-                tm.setCluster(cluster);
-                tm.insertPic(b, type, filename, username);
+            if(type != null){
+                String filename = part.getSubmittedFileName();
 
-                is.close();
+                InputStream is = request.getPart(part.getName()).getInputStream();
+                int i = is.available();
+                HttpSession session=request.getSession();
+                LoggedIn lg= (LoggedIn)session.getAttribute("LoggedIn");
+                String username="majed";
+
+                if (lg != null && lg.getlogedin()){
+                    username=lg.getUsername();
+                }
+                if (i > 0) {
+                    byte[] b = new byte[i + 1];
+                    is.read(b);
+                    System.out.println("Length : " + b.length);
+                    PicModel tm = new PicModel();
+                    tm.setCluster(cluster);
+
+                    String tint = (String)request.getParameter("Filter");
+                    tm.setTint(tint);
+                    tm.setGrey("None");
+
+                    tm.insertPic(b, type, filename, username);
+
+                    is.close();
+                }
+                RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+                rd.forward(request, response);
             }
-            RequestDispatcher rd = request.getRequestDispatcher("/InstagrAndrew/Images/" + username);
-            rd.forward(request, response);
         }
 
     }

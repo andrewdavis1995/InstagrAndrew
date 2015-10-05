@@ -58,10 +58,10 @@ a:hover{
     color: lightsteelblue;
 }
 
-
 li {
     margin-left: 20px;
     margin-top: 30px;
+    display: inline;
     width: 90px; 
     color: white;
 }

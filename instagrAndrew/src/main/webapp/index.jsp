@@ -16,12 +16,6 @@
     </head>
    
     
-    <script>
-        function performSearch(){
-            alert("HI");
-        }
-    </script>
-        
     
     <body background="developmentImages/4.JPG">
         <nav>
@@ -98,7 +92,7 @@
         
         
         <div style = "background-image: url('developmentImages/login background.png'); margin-left: 50px; width: 360px; height: 260px; margin-top: 100px; display: inline-block;">
-            <form method="POST" action="Search">
+            <form method="GET" action="Search">
                 <div style = "float: left; margin-left: 15px;">
                     <h5>Search for User: </h5>                                        
                     <input type="text" name="searchText">

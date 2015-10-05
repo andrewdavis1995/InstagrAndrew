@@ -63,21 +63,40 @@
                 }
                 document.getElementById('files').addEventListener('change', getImage, false);
             </script>
-
             
-            <input type="submit" value="Press"> to upload the file!
+            <br><br>
+            <div style="display: inline-block;">
+                <h3>Tint Color:</h3>
+                <input type="radio" value="None" name="Filter" checked="true">None<br>
+                <input type="radio" value="Red" name="Filter">Red<br>
+                <input type="radio" value="Blue" name="Filter">Blue<br>
+                <input type="radio" value="Yellow" name="Filter">Yellow<br>
+                <input type="radio" value="Green" name="Filter">Green<br>
+            </div>
+            
+            <div style="display: inline-block; margin-left: 20px">
+                <h3>Greyscale:</h3>
+                <input type="radio" value="No" name="Greyscale" checked="true">No<br>
+                <input type="radio" value="Yes" name="Greyscale">Yes<br>
+                <br><br><br>
+            </div>
+    
+            <br>
+            <h4>Click to Upload</h4>
+            <input type="submit" value="Submit">
+            
+            
+            
         </form>
+                        
             
-            <button onclick="reColour();" >Click Me</button>
-            <input type="range" min="0" max="100" step="10" id="inp" name="colorBar"/>
-            
-            <script>
+            <!--<script>
                 //http://jsfiddle.net/Mpx4s/1/
-                document.getElementById("inp").addEventListener('change', function() {
-                    document.getElementById("preview").setAttribute("style", "-webkit-filter:grayscale(" + this.value + "%); float: right; margin-right: 50px; border-style: solid; border-width: 2px; border-color: black;");
-                }, false);
+              //  document.getElementById("inp").addEventListener('change', function() {
+              //      document.getElementById("preview").setAttribute("style", "-webkit-filter:grayscale(" + this.value + "%); float: right; margin-right: 50px; border-style: solid; border-width: 2px; border-color: black;");
+              //  }, false);
                 
-            </script>
+            //</script> -->
             
 
     </body>
