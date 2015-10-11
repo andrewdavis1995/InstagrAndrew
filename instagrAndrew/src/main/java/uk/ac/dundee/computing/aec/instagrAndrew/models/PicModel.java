@@ -21,9 +21,12 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.utils.Bytes;
 import com.sun.corba.se.spi.presentation.rmi.StubAdapter;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.awt.Image;
+import java.awt.Graphics;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
+import java.awt.image.RescaleOp;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,6 +38,7 @@ import javax.imageio.ImageIO;
 import static org.imgscalr.Scalr.*;
 import java.awt.Color;
 import org.imgscalr.Scalr.Method;
+import java.net.URL;
 
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.*;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
@@ -45,6 +49,9 @@ public class PicModel {
     Cluster cluster;
     float tintValue;
     float greyValue;
+    float contrastValue;
+    //boolean vignetteOnOff;
+    
 
     public void PicModel() {
 
@@ -77,14 +84,48 @@ public class PicModel {
     }
     
     public void setGrey(String g){
-        if(g.equals("On")){
+        if(g.equals("Yes")){
             this.greyValue = 0f;
         }else{
             this.greyValue = -1;
         }
     }
+    
+    //public void setVignette(String v){
+    //    this.vignetteOnOff = !v.equals("On");
+    //}
+    
+    public void setContrast(String c){
+        switch (c) {
+            case "0":
+                this.contrastValue = -0.45f;
+                break;
+            case "1":
+                this.contrastValue = -0.3f;
+                break;
+            case "2":
+                this.contrastValue = -0.15f;
+                break;
+            case "3":
+                this.contrastValue = 0f;
+                break;
+            case "4":
+                this.contrastValue = 0.15f;
+                break;
+            case "5":
+                this.contrastValue = 0.3f;
+                break;
+            case "6":
+                this.contrastValue = 0.45f;
+                break;
+            default:
+                this.contrastValue = 0f;
+                break;
+        }
+    }
+    
 
-    public void insertPic(byte[] b, String type, String name, String user) {
+    public void insertPic(byte[] b, String type, String name, String user, String h) {
              
         try {
             Convertors convertor = new Convertors();
@@ -107,15 +148,18 @@ public class PicModel {
             int processedlength=processedb.length;
             Session session = cluster.connect("instagrAndrew");
 
-            PreparedStatement psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)");
-            PreparedStatement psInsertPicToUser = session.prepare("insert into userpiclist ( picid, user, pic_added) values(?,?,?)");
+            
+            PreparedStatement psInsertPic = session.prepare("insert into pics ( picid, hashtag, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement psInsertPicToUser = session.prepare("insert into userpiclist ( picid, hashtag, user, pic_added ) values(?,?,?,?)");
             BoundStatement bsInsertPic = new BoundStatement(psInsertPic);
             BoundStatement bsInsertPicToUser = new BoundStatement(psInsertPicToUser);
 
             Date DateAdded = new Date();
-            session.execute(bsInsertPic.bind(picid, buffer, thumbbuf,processedbuf, user, DateAdded, length,thumblength,processedlength, type, name));
-            session.execute(bsInsertPicToUser.bind(picid, user, DateAdded));
+            session.execute(bsInsertPic.bind(picid, h, buffer, thumbbuf,processedbuf, user, DateAdded, length,thumblength,processedlength, type, name));
+            session.execute(bsInsertPicToUser.bind(picid, h, user, DateAdded));
             session.close();
+            
+            
 
         } catch (IOException ex) {
             System.out.println("Error --> " + ex);
@@ -126,6 +170,15 @@ public class PicModel {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrAndrew/" + picid));
             BufferedImage thumbnail = doTints(BI, this.tintValue, this.greyValue, true);
+            
+            //if(this.vignetteOnOff){
+            //    thumbnail = addVignette(thumbnail);
+            //}
+            
+            if(this.contrastValue != 0f){
+                thumbnail = doContrast(thumbnail, this.contrastValue);
+            }
+            
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(thumbnail, type, baos);
             baos.flush();
@@ -143,6 +196,16 @@ public class PicModel {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrAndrew/" + picid));
             BufferedImage processed = doTints(BI, this.tintValue, this.greyValue, false);
+            
+            
+            if(this.contrastValue != 0f){
+                processed = doContrast(processed, this.contrastValue);
+            }
+            
+            //if(this.vignetteOnOff){
+            //    processed = addVignette(processed);
+            //}
+            
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(processed, type, baos);
             baos.flush();
@@ -160,6 +223,60 @@ public class PicModel {
         // Let's add a little border before we return result.
         //return pad(img, 2);
     //}
+    
+    public static BufferedImage doContrast(BufferedImage img, float f){
+        float brightenFactor = 1+f;
+        
+        RescaleOp op = new RescaleOp(brightenFactor, 0, null);
+        img = op.filter(img, img);
+        
+        return img;
+        
+    }
+    
+    
+    /*public BufferedImage addVignette (BufferedImage image){
+        
+        //load source images
+        try{
+            File img = new File("../developmentImages/cover.png");
+           
+            
+            BufferedImage overlay = ImageIO.read(img);
+                        
+            int w = image.getWidth();
+            int h = image.getHeight();
+            
+            // create the new image, canvas size is the max. of both image sizes
+            BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        
+            Image tmp = overlay.getScaledInstance(w, h, BufferedImage.SCALE_FAST);
+            BufferedImage buffered = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
+            buffered.getGraphics().drawImage(tmp, 0, 0, null);
+           
+            
+            Graphics g = combined.getGraphics();
+            
+            g.drawImage(image, 0, 0, null);
+            g.drawImage(tmp, 0, 0, null);
+            
+            
+            // Save as new image
+            ImageIO.write(combined, "PNG", new File("/tmpFolder/tmp___Image1234.png"));
+            
+            File returned = new File("/tmpFolder/tmp___Image1234.png");
+            BufferedImage output = ImageIO.read(returned);
+            
+            try{
+                returned.delete();
+            }catch(Exception e){}
+                
+            return output;
+        }catch(Exception e){}
+                               
+        return image;
+    }*/
+    
     
     
     public static BufferedImage doTints(BufferedImage img, float tint, float grey, boolean thumb){
@@ -197,7 +314,7 @@ public class PicModel {
         
         if(thumb){
             img = resize(img, Method.SPEED, 250, null, null);
-            return pad(img, 2);
+            return pad(img, 1);
         }else{
             return pad(img, 4);
         }
@@ -216,7 +333,7 @@ public class PicModel {
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
         java.util.LinkedList<Pic> Pics = new java.util.LinkedList<>();
         Session session = cluster.connect("instagrAndrew");
-        PreparedStatement ps = session.prepare("select picid from userpiclist where user =?");
+        PreparedStatement ps = session.prepare("select picid, hashtag from userpiclist where user =?");
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
@@ -229,8 +346,15 @@ public class PicModel {
             for (Row row : rs) {
                 Pic pic = new Pic();
                 java.util.UUID UUID = row.getUUID("picid");
-                System.out.println("UUID" + UUID.toString());
+                System.out.println("UUID: " + UUID.toString());
                 pic.setUUID(UUID);
+                String ht = row.getString("hashtag");
+                if(ht != null){
+                    //System.out.println("Hashtag: " + ht);
+                    pic.setHashtag(ht);
+                }else{
+                    //System.out.println("Hashtag is NULL");
+                }
                 Pics.add(pic);
 
             }
@@ -242,18 +366,20 @@ public class PicModel {
         Session session = cluster.connect("instagrAndrew");
         ByteBuffer bImage = null;
         String type = null;
+        //String hashtag = "";
         int length = 0;
+        String date = "";
         try {
             Convertors convertor = new Convertors();
             ResultSet rs = null;
             PreparedStatement ps = null;
          
             if (image_type == Convertors.DISPLAY_IMAGE) {
-                ps = session.prepare("select image,imagelength,type from pics where picid =?");
+                ps = session.prepare("select image,imagelength,type,interaction_time from pics where picid =?");
             } else if (image_type == Convertors.DISPLAY_THUMB) {
-                ps = session.prepare("select thumb,imagelength,thumblength,type from pics where picid =?");
+                ps = session.prepare("select thumb,imagelength,thumblength,type,interaction_time from pics where picid =?");
             } else if (image_type == Convertors.DISPLAY_PROCESSED) {
-                ps = session.prepare("select processed,processedlength,type from pics where picid =?");
+                ps = session.prepare("select processed,processedlength,type,interaction_time from pics where picid =?");
             }
             BoundStatement boundStatement = new BoundStatement(ps);
             rs = session.execute( // this is where the query is executed
@@ -268,13 +394,18 @@ public class PicModel {
                     if (image_type == Convertors.DISPLAY_IMAGE) {
                         bImage = row.getBytes("image");
                         length = row.getInt("imagelength");
+                        //date = row.getString("interaction_time");
+                        //hashtag = row.getString("hashtag");
                     } else if (image_type == Convertors.DISPLAY_THUMB) {
                         bImage = row.getBytes("thumb");
                         length = row.getInt("thumblength");
-                
+                        //date = row.getString("interaction_time");
+                        //hashtag = row.getString("hashtag");
                     } else if (image_type == Convertors.DISPLAY_PROCESSED) {
                         bImage = row.getBytes("processed");
                         length = row.getInt("processedlength");
+                        //date = row.getString("interaction_time");
+                        //hashtag = row.getString("hashtag");
                     }
                     
                     type = row.getString("type");
@@ -282,12 +413,12 @@ public class PicModel {
                 }
             }
         } catch (Exception et) {
-            System.out.println("Can't get Pic" + et);
+            System.out.println("Can't get Pic - " + et);
             return null;
         }
         session.close();
         Pic p = new Pic();
-        p.setPic(bImage, length, type);
+        p.setPic(bImage, length, type, "drewswatchingyou");
 
         return p;
 

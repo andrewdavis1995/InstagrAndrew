@@ -18,6 +18,8 @@ public class Pic {
     private int length;
     private String type;
     private java.util.UUID UUID=null;
+    //private String date;
+    private String hashtag;
     
     public void Pic() {
 
@@ -26,28 +28,36 @@ public class Pic {
         this.UUID =UUID;
     }
     public String getSUUID(){
-        return UUID.toString();
+        return this.UUID.toString();
     }
-    public void setPic(ByteBuffer bImage, int length,String type) {
+    public void setPic(ByteBuffer bImage, int length, String type, String h) {
         this.bImage = bImage;
         this.length = length;
         this.type=type;
+        //this.date = d;
+        this.hashtag = h;
     }
 
     public ByteBuffer getBuffer() {
-        return bImage;
+        return this.bImage;
     }
-
+    
+    public String getHashtag(){
+        return this.hashtag;
+    }
+    public void setHashtag(String h){
+        this.hashtag = h;
+    }
+    
     public int getLength() {
-        return length;
+        return this.length;
     }
     
     public String getType(){
-        return type;
+        return this.type;
     }
 
     public byte[] getBytes() {
-         
         byte image[] = Bytes.getArray(bImage);
         return image;
     }

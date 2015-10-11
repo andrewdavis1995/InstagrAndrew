@@ -16,11 +16,12 @@
     </head>
    
     
-    
     <body background="developmentImages/4.JPG">
-        <nav>
+        
+        <nav style="z-index: -1; background-image: url('developmentImages/newLogo.png')">
             <ul>
-                <h1 style = "display: inline; font-size: 1.7em">InstagrAndrew</h1>
+                    
+                <h1 style = "display: inline; font-size: 1.7em; margin-left: 250px;">InstagrAndrew</h1>
                 <li><a href="upload.jsp">Upload</a></li>
                     <%
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
@@ -33,7 +34,12 @@
                 
                 <li><a href="/InstagrAndrew/Images/<%=lg.getUsername()%>?type=user">Your Images</a></li>
                 
-                                      
+                <form action="LogOut" method="POST">
+                    <input type="submit" value="Log Out" style="margin-left: 30px; margin-bottom: 15px; width: 150px"> 
+                </form>
+                
+                
+                
                     <%}
                             }else{
                                 %>
@@ -101,10 +107,10 @@
             </form>
         </div>
 
-        
-        
-            
-       <% } %>
+        <%         
+            }
+           
+        %>
             
         <footer>
             <ul>

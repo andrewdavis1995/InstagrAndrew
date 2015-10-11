@@ -141,6 +141,7 @@ public class Image extends HttpServlet {
             if(type != null){
                 String filename = part.getSubmittedFileName();
 
+                
                 InputStream is = request.getPart(part.getName()).getInputStream();
                 int i = is.available();
                 HttpSession session=request.getSession();
@@ -154,14 +155,48 @@ public class Image extends HttpServlet {
                     byte[] b = new byte[i + 1];
                     is.read(b);
                     System.out.println("Length : " + b.length);
+                    
                     PicModel tm = new PicModel();
                     tm.setCluster(cluster);
 
                     String tint = (String)request.getParameter("Filter");
                     tm.setTint(tint);
-                    tm.setGrey("None");
+                                        
+                    String grey = (String)request.getParameter("Greyscale");
+                    tm.setGrey(grey);
+                    
+                    //String vig = (String)request.getParameter("Vignette");
+                    //tm.setVignette(vig);
+                    
+                    String contrast = (String)request.getParameter("Contrast");
+                    tm.setContrast(contrast);
 
-                    tm.insertPic(b, type, filename, username);
+                    String h1 = (String)request.getParameter("hiddenHT1");
+                    String h2 = (String)request.getParameter("hiddenHT2");
+                    String h3 = (String)request.getParameter("hiddenHT3");
+                    
+                    System.out.println(h1 + "---" + h2 + "---" + h3);
+                    
+                    String hashtag = null;
+                    
+                    if (!"".equals(h1)){
+                        hashtag = h1;
+                    }
+                    if (!"".equals(h2)){
+                        hashtag += "," + h2;
+                        
+                    }
+                    if (!"".equals(h3)){
+                        if(hashtag == null){
+                            hashtag = h3;
+                        }else{
+                            hashtag += "," + h3;
+                        }
+                    }
+                    
+                    System.out.println(hashtag);
+                                        
+                    tm.insertPic(b, type, filename, username, hashtag);
 
                     is.close();
                 }

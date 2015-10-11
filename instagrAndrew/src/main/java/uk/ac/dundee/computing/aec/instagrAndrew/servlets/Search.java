@@ -39,18 +39,23 @@ public class Search extends HttpServlet {
         
         
             String name = request.getParameter("searchText");
-            
-            
-            User us=new User();
-            us.setCluster(cluster);
-            
-            ArrayList<String> matches = us.getMatchingUsers(name);
-                                    
-            request.setAttribute("matches", matches);
-            request.setAttribute("searchedText", name);
-            
-            request.getRequestDispatcher("SearchResults.jsp").forward(request, response);
-            
+
+            if(name != null){
+                User us=new User();
+                us.setCluster(cluster);
+
+                ArrayList<String> matches = us.getMatchingUsers(name);
+
+                request.setAttribute("matches", matches);
+                request.setAttribute("searchedText", name);
+
+                request.getRequestDispatcher("SearchResults.jsp").forward(request, response);            
+            }else{
+                //String hashtag = request.getParameter("Hashtag");
+                
+                //search for images with matching hashtag
+                
+            }
     }
               
               

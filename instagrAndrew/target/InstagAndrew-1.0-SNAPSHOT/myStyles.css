@@ -101,7 +101,7 @@ footer{
 body{
     margin-top: 80px;
     margin-left: 40px;
-    background-color: #e7d99e;
+    background-color: #39335B;
     color: white;
     font-family: Tahoma, Geneva, sans-serif;
     background-attachment: fixed;
@@ -109,14 +109,14 @@ body{
 }
 
 nav{
-    background-color: black;
+    background-color: #313135;
     color: white;
     list-style-type: none;
     height: 65px;
     width: 100%;
     vertical-align: middle;
     position: fixed;
-    top: 0;
+    top: 15px;
     left: 0;
 }
 
