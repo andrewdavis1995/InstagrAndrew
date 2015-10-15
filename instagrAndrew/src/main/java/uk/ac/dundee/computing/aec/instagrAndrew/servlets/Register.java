@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
+import uk.ac.dundee.computing.aec.instagrAndrew.models.Validation;
 
 /**
  *
@@ -45,14 +46,24 @@ public class Register extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        String fName=request.getParameter("forename");
+        String surname=request.getParameter("surname");
+        String email=request.getParameter("email");
         String username=request.getParameter("username");
         String password=request.getParameter("password");
+        String confPass=request.getParameter("confirmPassword");
         
         User us=new User();
         us.setCluster(cluster);
-        us.RegisterUser(username, password);
+        Validation isValid = us.checkDetails(fName, surname, email, username, password, confPass);
         
-		response.sendRedirect("/InstagrAndrew");
+        if(isValid.getValidity()){
+            us.RegisterUser(fName, surname, email, username, password);
+            response.sendRedirect("/InstagrAndrew");
+        }else{
+            response.sendRedirect("/InstagrAndrew/register.jsp");
+        }
         
     }
 

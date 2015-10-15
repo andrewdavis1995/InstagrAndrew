@@ -21,7 +21,7 @@
             </ul>
         </nav>
  
-        <img id = "preview" src ="developmentImages/no preview.png" style = "float: right; margin-right: 50px; border-style: solid; border-width: 2px; border-color: black; -webkit-filter: grayscale(1); filter: gray; filter: grayscale(1);" name = "preview" width = 500; height = 500;/>
+        <img id = "preview" src ="developmentImages/no preview.png" style = "float: right; margin-right: 50px; border-style: solid; border-width: 2px; border-color: black;" name = "preview" width = 500; height = 500;/>
         <h1 style = "color: black">SELECT FILE TO UPLOAD</h1>  
         
         

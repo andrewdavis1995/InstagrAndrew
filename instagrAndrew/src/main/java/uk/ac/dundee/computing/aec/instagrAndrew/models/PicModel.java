@@ -39,6 +39,8 @@ import static org.imgscalr.Scalr.*;
 import java.awt.Color;
 import org.imgscalr.Scalr.Method;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.UUID;
 
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.*;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
@@ -125,7 +127,7 @@ public class PicModel {
     }
     
 
-    public void insertPic(byte[] b, String type, String name, String user, String h) {
+    public void insertPic(byte[] b, String type, String name, String user, String h, boolean profilePic) {
              
         try {
             Convertors convertor = new Convertors();
@@ -140,23 +142,30 @@ public class PicModel {
             FileOutputStream output = new FileOutputStream(new File("/var/tmp/instagrAndrew/" + picid));
 
             output.write(b);
-            byte []  thumbb = picresize(picid.toString(),types[1]);
-            int thumblength= thumbb.length;
-            ByteBuffer thumbbuf=ByteBuffer.wrap(thumbb);
+            byte []  thumb = picresize(picid.toString(),types[1]);
+            int thumblength= thumb.length;
+            ByteBuffer thumbbuf=ByteBuffer.wrap(thumb);
             byte[] processedb = picdecolour(picid.toString(),types[1]);
             ByteBuffer processedbuf=ByteBuffer.wrap(processedb);
             int processedlength=processedb.length;
             Session session = cluster.connect("instagrAndrew");
 
+            Date DateAdded = new Date();
             
             PreparedStatement psInsertPic = session.prepare("insert into pics ( picid, hashtag, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?,?)");
-            PreparedStatement psInsertPicToUser = session.prepare("insert into userpiclist ( picid, hashtag, user, pic_added ) values(?,?,?,?)");
             BoundStatement bsInsertPic = new BoundStatement(psInsertPic);
-            BoundStatement bsInsertPicToUser = new BoundStatement(psInsertPicToUser);
-
-            Date DateAdded = new Date();
             session.execute(bsInsertPic.bind(picid, h, buffer, thumbbuf,processedbuf, user, DateAdded, length,thumblength,processedlength, type, name));
-            session.execute(bsInsertPicToUser.bind(picid, h, user, DateAdded));
+                        
+            if(!profilePic){
+                PreparedStatement psInsertPicToUser = session.prepare("insert into userpiclist ( picid, hashtag, user, pic_added ) values(?,?,?,?)");
+                BoundStatement bsInsertPicToUser = new BoundStatement(psInsertPicToUser);
+                session.execute(bsInsertPicToUser.bind(picid, h, user, DateAdded));
+            }else{
+                PreparedStatement psInsertProfPicToUser = session.prepare("update userprofiles set profilepic = ? where login = ?");
+                BoundStatement bsInsertProfPicToUser = new BoundStatement(psInsertProfPicToUser);
+                session.execute(bsInsertProfPicToUser.bind(picid, user));
+                System.out.println("Done HERE");
+            }
             session.close();
             
             
@@ -361,6 +370,30 @@ public class PicModel {
         }
         return Pics;
     }
+    
+    
+    public UUID getProfilePic(String User) {
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("select profilepic from userprofiles where login =?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        User));
+        if (rs.isExhausted()) {
+            System.out.println("No Images returned");
+            return null;
+        } else {
+            for (Row row : rs) {
+                java.util.UUID UUID = row.getUUID("profilepic");
+                return UUID;       
+            }
+        
+            return null;
+        
+        }
+    }
+    
 
     public Pic getPic(int image_type, java.util.UUID picid) {
         Session session = cluster.connect("instagrAndrew");
@@ -418,10 +451,47 @@ public class PicModel {
         }
         session.close();
         Pic p = new Pic();
-        p.setPic(bImage, length, type, "drewswatchingyou");
+        p.setPic(bImage, length, type, null);
 
         return p;
 
+    }
+    
+    
+    public java.util.LinkedList<Pic> getMatchingPics(String searched){
+        java.util.LinkedList<Pic> picList = new java.util.LinkedList<Pic>();
+                
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("select * from userpicList");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute(boundStatement);
+        if (rs.isExhausted()) {
+            System.out.println("No Images returned");
+            return new java.util.LinkedList<Pic>();
+        } else {
+            for (Row row : rs) {
+               
+                String fullString = row.getString("hashtag");
+                UUID uuid = row.getUUID("picId");
+                String us = row.getString("user");
+                
+                String[] tags = fullString.split(",");
+                
+                for(int i = 0; i < tags.length; i++){
+                    if (tags[i].toLowerCase().equals(searched.toLowerCase())){
+                        Pic toAdd = new Pic();
+                        toAdd.setUUID(uuid);
+                        toAdd.setUser(us);
+                        picList.add(toAdd);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        
+        return picList;
     }
 
 }

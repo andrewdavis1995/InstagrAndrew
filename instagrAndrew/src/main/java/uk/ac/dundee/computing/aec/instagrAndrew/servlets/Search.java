@@ -20,6 +20,7 @@ import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import javax.servlet.ServletConfig;
 import com.datastax.driver.core.Cluster;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
+import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
 
 /**
  *

@@ -1,6 +1,11 @@
 package uk.ac.dundee.computing.aec.instagrAndrew.servlets;
 
+import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.BufferedInputStream;
@@ -13,6 +18,8 @@ import java.util.HashMap;
 import javax.servlet.RequestDispatcher;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.UUID;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -29,6 +36,8 @@ import org.apache.commons.fileupload.util.Streams;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.Convertors;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.PicModel;
+import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
+import uk.ac.dundee.computing.aec.instagrAndrew.models.UserDetails;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
 
@@ -100,12 +109,20 @@ public class Image extends HttpServlet {
         }
     }
 
-    private void DisplayImageList(String User, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void DisplayImageList(String user, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PicModel tm = new PicModel();
         tm.setCluster(cluster);
-        java.util.LinkedList<Pic> lsPics = tm.getPicsForUser(User);
+        java.util.LinkedList<Pic> lsPics = tm.getPicsForUser(user);
         RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
+        UUID profilePic = tm.getProfilePic(user);
+        request.setAttribute("ProfilePic", profilePic);
         request.setAttribute("Pics", lsPics);
+        User usr = new User();
+        usr.setCluster(cluster);
+        UserDetails deets = usr.getProfileInfo(user);
+        //get email, first name and surname - function in the User file
+        request.setAttribute("EmailAddress", deets.getEmail());
+        request.setAttribute("Full_Name", deets.getName());
         rd.forward(request, response);
     }
     
@@ -134,14 +151,25 @@ public class Image extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
+        int count = 0;
+        
         for (Part part : request.getParts()) {
             System.out.println("Part Name " + part.getName());
 
+            
+            System.out.println("COUNT (TOP): " + count);
+            
             String type = part.getContentType();
             if(type != null){
+                
                 String filename = part.getSubmittedFileName();
 
+                String thing = request.getParameter("profilePic");
                 
+                System.out.println("ProfilePic contains: " + thing);
+                boolean profpic;
+                profpic = thing != null;
+                         
                 InputStream is = request.getPart(part.getName()).getInputStream();
                 int i = is.available();
                 HttpSession session=request.getSession();
@@ -155,58 +183,87 @@ public class Image extends HttpServlet {
                     byte[] b = new byte[i + 1];
                     is.read(b);
                     System.out.println("Length : " + b.length);
-                    
+
                     PicModel tm = new PicModel();
                     tm.setCluster(cluster);
-
-                    String tint = (String)request.getParameter("Filter");
-                    tm.setTint(tint);
-                                        
-                    String grey = (String)request.getParameter("Greyscale");
-                    tm.setGrey(grey);
-                    
-                    //String vig = (String)request.getParameter("Vignette");
-                    //tm.setVignette(vig);
-                    
-                    String contrast = (String)request.getParameter("Contrast");
-                    tm.setContrast(contrast);
-
-                    String h1 = (String)request.getParameter("hiddenHT1");
-                    String h2 = (String)request.getParameter("hiddenHT2");
-                    String h3 = (String)request.getParameter("hiddenHT3");
-                    
-                    System.out.println(h1 + "---" + h2 + "---" + h3);
                     
                     String hashtag = null;
+                    String tint;
+                    String grey;
+                    String contrast;
                     
-                    if (!"".equals(h1)){
-                        hashtag = h1;
-                    }
-                    if (!"".equals(h2)){
-                        hashtag += "," + h2;
+                    if(!profpic){
+
+                        tint = (String)request.getParameter("Filter");
+                        tm.setTint(tint);
+
+                        grey = (String)request.getParameter("Greyscale");
+                        tm.setGrey(grey);
+
+                        //String vig = (String)request.getParameter("Vignette");
+                        //tm.setVignette(vig);
+
+                        contrast = (String)request.getParameter("Contrast");
+                        tm.setContrast(contrast);
                         
-                    }
-                    if (!"".equals(h3)){
-                        if(hashtag == null){
-                            hashtag = h3;
-                        }else{
-                            hashtag += "," + h3;
+
+                        String h1 = (String)request.getParameter("hiddenHT1");
+                        String h2 = (String)request.getParameter("hiddenHT2");
+                        String h3 = (String)request.getParameter("hiddenHT3");
+
+                        System.out.println(h1 + "---" + h2 + "---" + h3);
+
+
+                        if (!"".equals(h1)){
+                            hashtag = h1;
                         }
+                        if (!"".equals(h2)){
+                            hashtag += "," + h2;
+
+                        }
+                        if (!"".equals(h3)){
+                            if(hashtag == null){
+                                hashtag = h3;
+                            }else{
+                                hashtag += "," + h3;
+                            }
+                        }
+
+                    }
+                    else{
+                        System.out.println("NOW");
+                
+                        tm.setContrast("3");
+                        tm.setGrey("No");
+                        tm.setTint("None");
                     }
                     
-                    System.out.println(hashtag);
-                                        
-                    tm.insertPic(b, type, filename, username, hashtag);
+                    tm.insertPic(b, type, filename, username, hashtag, profpic);
+                    System.out.println("Done THERE");
+                    System.out.println("COUNT (AFTER INSERT): " + count);
 
                     is.close();
                 }
-                RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-                rd.forward(request, response);
+                count++;
+                System.out.println("COUNT (AT END): " + count);
+                
+                
+                if(profpic){
+                    response.sendRedirect(username + "?type=user");
+                }else{
+                    RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+                    rd.forward(request, response);
+                }
+                
+                break;
+            }else{
+                System.out.println("gttgt");
             }
         }
 
     }
 
+    
     private void error(String mess, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter out = null;

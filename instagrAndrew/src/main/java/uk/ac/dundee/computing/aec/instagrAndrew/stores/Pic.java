@@ -19,11 +19,21 @@ public class Pic {
     private String type;
     private java.util.UUID UUID=null;
     //private String date;
+    private String user;
     private String hashtag;
     
     public void Pic() {
 
     }
+    
+    public void setUser(String u){
+        this.user = u;
+    }
+    
+    public String getUser(){
+        return this.user;
+    }
+    
     public void setUUID(java.util.UUID UUID){
         this.UUID =UUID;
     }

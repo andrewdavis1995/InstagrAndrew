@@ -35,5 +35,26 @@
             </div>
         </div>
         
+        <p>Count numbers: <output id="result"></output></p>
+        <button onclick="sayHI()">Start Worker</button> 
+        
+        
     </body>
+    
+    <script>
+        
+        var username = "Andrew";
+        
+        function sayHI() {
+            worker.postMessage({'cmd': 'start', 'msg': username});
+        }
+        
+        var worker = new Worker('workerTest.js');
+
+        worker.addEventListener('message', function(e) {
+          document.getElementById('result').textContent = e.data.msg;
+        }, false);
+        
+    </script>
+    
 </html>
