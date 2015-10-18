@@ -13,27 +13,22 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="newcss.css" />
+        <link rel="stylesheet" type="text/css" href="myStyles.css" />
         <title>Search Results</title>
     </head>
-    <body background="developmentImages/cork.jpg">
-        <!--<nav>
+    <body>
+        <nav>
             <ul>
                 <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
                 <li class="nav"><a href="upload.jsp">Upload</a></li>
                 <li class="nav"><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
             </ul>
-        </nav>-->
-        
-        <ul>
-            <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
-            <li class="nav"><a href="upload.jsp">Upload</a></li>
-            <li class="nav"><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
-        </ul>
+        </nav>
         
         
-        <h1 style="color: black">Search Results</h1>
-        <h3 style="color: black">You Searched For: <%= (String)request.getAttribute("searchedText") %> </h3>
+        
+        <h1 style="color: white">Search Results</h1>
+        <h3 style="color: white">You Searched For: <%= (String)request.getAttribute("searchedText") %> </h3>
         
         <%  java.util.LinkedList<Pic> matches = (java.util.LinkedList<Pic>) request.getAttribute("matches");
             Iterator<Pic> iterator = matches.iterator();

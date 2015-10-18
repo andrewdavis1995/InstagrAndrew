@@ -151,13 +151,7 @@ public class Image extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        int count = 0;
-        
         for (Part part : request.getParts()) {
-            System.out.println("Part Name " + part.getName());
-
-            
-            System.out.println("COUNT (TOP): " + count);
             
             String type = part.getContentType();
             if(type != null){
@@ -166,7 +160,6 @@ public class Image extends HttpServlet {
 
                 String thing = request.getParameter("profilePic");
                 
-                System.out.println("ProfilePic contains: " + thing);
                 boolean profpic;
                 profpic = thing != null;
                          
@@ -182,7 +175,6 @@ public class Image extends HttpServlet {
                 if (i > 0) {
                     byte[] b = new byte[i + 1];
                     is.read(b);
-                    System.out.println("Length : " + b.length);
 
                     PicModel tm = new PicModel();
                     tm.setCluster(cluster);
@@ -211,9 +203,6 @@ public class Image extends HttpServlet {
                         String h2 = (String)request.getParameter("hiddenHT2");
                         String h3 = (String)request.getParameter("hiddenHT3");
 
-                        System.out.println(h1 + "---" + h2 + "---" + h3);
-
-
                         if (!"".equals(h1)){
                             hashtag = h1;
                         }
@@ -231,7 +220,6 @@ public class Image extends HttpServlet {
 
                     }
                     else{
-                        System.out.println("NOW");
                 
                         tm.setContrast("3");
                         tm.setGrey("No");
@@ -239,14 +227,9 @@ public class Image extends HttpServlet {
                     }
                     
                     tm.insertPic(b, type, filename, username, hashtag, profpic);
-                    System.out.println("Done THERE");
-                    System.out.println("COUNT (AFTER INSERT): " + count);
 
                     is.close();
                 }
-                count++;
-                System.out.println("COUNT (AT END): " + count);
-                
                 
                 if(profpic){
                     response.sendRedirect(username + "?type=user");
@@ -256,8 +239,6 @@ public class Image extends HttpServlet {
                 }
                 
                 break;
-            }else{
-                System.out.println("gttgt");
             }
         }
 

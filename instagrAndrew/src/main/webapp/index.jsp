@@ -32,7 +32,7 @@
                     %>
 
                 
-                <li><a href="/InstagrAndrew/Images/<%=lg.getUsername()%>?type=user">Your Images</a></li>
+                <li><a href="/InstagrAndrew/Images/<%=lg.getUsername()%>?type=user">Your Profile</a></li>
                 
                 <form action="LogOut" method="POST">
                     <input type="submit" value="Log Out" style="margin-left: 30px; margin-bottom: 15px; width: 150px"> 

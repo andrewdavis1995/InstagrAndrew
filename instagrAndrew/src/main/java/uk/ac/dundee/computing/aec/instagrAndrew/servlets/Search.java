@@ -20,6 +20,7 @@ import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import javax.servlet.ServletConfig;
 import com.datastax.driver.core.Cluster;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
+import uk.ac.dundee.computing.aec.instagrAndrew.models.UserDetails;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
 
 /**
@@ -45,7 +46,7 @@ public class Search extends HttpServlet {
                 User us=new User();
                 us.setCluster(cluster);
 
-                ArrayList<String> matches = us.getMatchingUsers(name);
+                ArrayList<UserDetails> matches = us.getMatchingUsers(name);
 
                 request.setAttribute("matches", matches);
                 request.setAttribute("searchedText", name);

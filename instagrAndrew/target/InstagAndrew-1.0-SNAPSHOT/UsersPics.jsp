@@ -7,6 +7,7 @@
 <%@page import="java.util.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="uk.ac.dundee.computing.aec.instagrAndrew.stores.*" %>
+<%@ page import="uk.ac.dundee.computing.aec.instagrAndrew.servlets.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,10 +16,6 @@
         <link rel="stylesheet" type="text/css" href="/InstagrAndrew/myStyles.css" />
         
         <script>
-            function setImageCount(name, count, email){
-                document.getElementById('profileName').innerHTML = name + "<br> (Total Images: " + count + ")";   
-                document.getElementById('emailAddress').innerHTML = email;
-            }
             
             function showChangeButton(){
                 document.getElementById("changeImageBtn").style.display = 'block';
@@ -27,11 +24,17 @@
             function hideChangeButton(){
                 document.getElementById("changeImageBtn").style.display = 'none';
             }
-            
+          
         </script>
         
     </head>
         
+    <% String type;
+        String search;
+        String name;
+        String emailString;
+        %>
+    
     <body background="../developmentImages/cork.jpg" style="margin-top: 175px;">
         
         <nav style="top: 0">
@@ -49,9 +52,14 @@
                 
                 LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
 
-                String search = request.getParameter("search");
-                String type = request.getParameter("type");
-
+                search = request.getParameter("search");
+                type = request.getParameter("type");
+                
+                System.out.println(search + "----" + type);
+                %>
+                
+                
+                <%
                 if (lg != null) {
 
                     if( type != null && type != "" && search != ""){
@@ -59,9 +67,8 @@
                         if(type.equals("other") && !search.equals(lg.getUsername())){
 
                         %> 
-                        <h4 onmouseover="showChangeButton()" id="profileName" style="position: absolute; top: 0px; margin-top: 0px; display: inline-block; position: absolute; left: 120px; margin-left: 20px; top: 20px"> <%= search %>'s Profile </h4>
                         
-                        <%    if ( request.getAttribute("ProfilePic") == null){ %>
+                        <% if ( request.getAttribute("ProfilePic") == null){ %>
                                 <img id="ProfPic" src = "../developmentImages/question.png" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
                             <%
                             }else{ %>
@@ -69,6 +76,13 @@
                             <% 
                             }
                         
+                            %>
+                            <h2 id="fullName" style="color: white; position: absolute; top: 0px; display: inline-block; left: 120px; margin-left: 20px; margin-top: 0;"> NAME </h2>
+                            <p id="profileName" style="color: white; position: absolute; top: 15px; display: inline-block; left: 120px; margin-left: 20px;"> Your Profile </p>
+                            <p id="imageCount" style="color: white; position: absolute; top: 30px; display: inline-block; left: 120px; margin-left: 20px;"> 0 IMAGES</p>
+                            <p id="emailAddress" style="color: white; position: absolute; top: 45px; display: inline-block; left: 120px; margin-left: 20px;"> THINGS </p>
+                           
+                        <%
                         }else{
                             %>
                             
@@ -78,10 +92,10 @@
                                 <div onmouseover="showChangeButton()" onmouseout="hideChangeButton()" class="image-upload" >
                                     
                                     <% if ( request.getAttribute("ProfilePic") == null){ %>
-                                        <img id="ProfPic" src = "developmentImages/question.png" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
+                                        <img id="ProfPic" src = "../developmentImages/question.png" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
                                     <%
                                     }else{ %>
-                                        <img id="ProfPic" src = "/InstagrAndrew/Image/<%= request.getAttribute("ProfilePic") %>" style="border-style: solid; border-width: 2px; width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
+                                        <img id="ProfPic" src = "/InstagrAndrew/Image/<%= request.getAttribute("ProfilePic") %>" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
                                     <% 
                                     }
                                     %>
@@ -124,12 +138,15 @@
                                     document.getElementById('files').addEventListener('change', getImage, false);
                                 </script>
 
+                                <h2 id="fullName" style="color: white; position: absolute; top: 0px; display: inline-block; left: 120px; margin-left: 20px; margin-top: 0;"> NAME </h2>
+                                <p id="profileName" style="color: white; position: absolute; top: 15px; display: inline-block; left: 120px; margin-left: 20px;"> Your Profile </p>
+                                <p id="imageCount" style="color: white; position: absolute; top: 30px; display: inline-block; left: 120px; margin-left: 20px;"> 0 IMAGES</p>
+                                <p id="emailAddress" style="color: white; position: absolute; top: 45px; display: inline-block; left: 120px; margin-left: 20px;"> THINGS </p>
+                           
+                                
                                 <input type="submit" value="Submit" style="float: right;">
                             </form>
                             
-                            
-                            <h4 id="profileName" style="position: absolute; margin-top: 0px; display: inline-block; left: 120px; margin-left: 20px; top: 20px"> Your Profile </h4>
-                            <h5 id="emailAddress" style="position: absolute; top: 40px; margin-top: 0px; display: inline-block; left: 120px; margin-left: 20px;"></h5>
                             <%
                                     
                         }
@@ -144,11 +161,11 @@
         <%
             java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("Pics");
             Set<String> email = (Set<String>)request.getAttribute("EmailAddress");
-            String name = (String)request.getAttribute("Full_Name");
+            name = (String)request.getAttribute("Full_Name");
+            String[] sdfdsf = new String[3];
+            email.toArray(sdfdsf);
+            emailString = sdfdsf[0];
             
-            if (email == null){
-                email = new TreeSet<String>();
-            }
             if (name == null){
                 name = "";
             }
@@ -157,7 +174,7 @@
             
             if (lsPics == null) {
         %>
-                <p>No Pictures found</p>
+                <h2 style = "color: black;">No Pictures found</h2>
         <%
             } else {
                 Iterator<Pic> iterator;
@@ -166,11 +183,12 @@
                     count++;
                     Pic p = (Pic) iterator.next();
         %>
-                    <div  position="relative" style = "background-image: url('../developmentImages/pinBG.png'); display: inline-block; width: 350px; height: 400px; margin-bottom: 50px; margin-left: 20px"> 
+                    <div position="relative" style = "background-image: url('../developmentImages/pinBG.png'); display: inline-block; width: 350px; height: 400px; margin-bottom: 50px; margin-left: 20px"> 
                         <% 
                         String hts = p.getHashtag();
+                        String[] splitHT = new String[3];
                         if(hts != null){
-                            String[] splitHT = hts.split(",");
+                            splitHT = hts.split(",");
                             for (int i = 0; i < splitHT.length; i++){
                             %>
                             <li><a style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%" href="../SearchHashtag?searchText=<%=splitHT[i]%>">#<%= splitHT[i] %> </a></li> 
@@ -181,21 +199,57 @@
                                 <li><a style="margin-top: 5px; color: crimson; float: left; margin-left: 48px; width: 100%">No Hashtags</a></li> 
                             <%
                         }
+                        
+                        String hashtagOutput = "";
+                        
+                        for (int i = 0; i < 3; i++){
+                            if(splitHT[i] != null){
+                                hashtagOutput += "#" + splitHT[i] + ", ";
+                            }
+                        }
+                        
+                        if (hashtagOutput.length() > 1){
+                            hashtagOutput = hashtagOutput.substring(0, hashtagOutput.length() -2);
+                        }
+                        
                         %>
-                        <a style ="display: block; margin-left: 48px; margin-top: 15px; float: left" href="/InstagrAndrew/Image/<%= p.getSUUID()%>" ><img src="/InstagrAndrew/Thumb/<%=p.getSUUID()%>"></a>  
+                            <form method="POST" action="../Comments">
+                                <input type="hidden" name="imageSrc" id="imageSrc" value ="<%= p.getSUUID()%>">
+                                <input type="hidden" name="whatToDo" id="whatToDo" value ="read">
+                                <input type="hidden" name="username" id="username" value ="<%=name%>">
+                                <input type="hidden" name="hashtags" id="hashtags" value="<%=hashtagOutput%> ">
+                                <input type="hidden" name="profPic" id="profPic" value ="<%=request.getAttribute("ProfilePic")%>">
+                                <a style ="display: block; margin-left: 48px; margin-top: 15px; float: left" >
+                                <img src="/InstagrAndrew/Thumb/<%=p.getSUUID()%>"></a>
+                                <input type="submit" name="Submit" value="SUBMIT">
+                            </form>
                     </div>
         
                     <%            
                     }
                 }
         %>
-        
+
         <script>
-            if(<%= search %> != null){
-                setImageCount(<%= search %> + "'s Profile", <%= count %>, <%= email %>, <%= name %>);
+            
+            
+            var srch = "<%=search%>";
+            var fullName = "<%=name%>";
+            var em = "<%=emailString%>";
+            var count = "<%=count%>";
+            
+            if(srch === "null"){
+                document.getElementById('profileName').innerHTML = "Your Profile";   
+                document.getElementById('imageCount').innerHTML = "(Total Images:" + count + ")";
+                document.getElementById('fullName').innerHTML = fullName;
+                document.getElementById('emailAddress').innerHTML = em;
             }else{
-                setImageCount("Your Profile", <%= count %>, <%= email %>, <%= name %> );
+                document.getElementById('profileName').innerHTML = srch + "'s Profile";   
+                document.getElementById('imageCount').innerHTML = "(Total Images:" + count + ")";
+                document.getElementById('fullName').innerHTML = fullName;
+                document.getElementById('emailAddress').innerHTML = em;
             }
+            
         </script>
         
     </body>

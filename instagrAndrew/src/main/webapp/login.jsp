@@ -23,7 +23,7 @@
         </nav>
        
         <div style = "background-image: url('developmentImages/login background.png'); margin-left: 50px; width: 360px; height: 260px; margin-top: 150px;">
-            <form method="POST"  action="Login">
+            <form method="POST" action="Login">
                 <ul>
                     <br>
                     <h2 style="color: white;">LOGIN</h2>

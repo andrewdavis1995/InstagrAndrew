@@ -17,8 +17,8 @@ footer{
 
 body{
     margin-top: 80px;
-    margin-left: 40px;
-    background-color: #2C77CE;
+    margin-left: 20px;
+    background-color: midnightblue;
     color: white;
     font-family: Tahoma, Geneva, sans-serif;
     background-attachment: fixed;
@@ -26,7 +26,7 @@ body{
 }
 
 nav{
-    background-color: black;
+    background-color: #313135;
     color: white;
     list-style-type: none;
     height: 65px;
@@ -38,10 +38,9 @@ nav{
 }
 
 a {
-    color: white;
     font-size: 1.1em;
     transition-property: color;
-    transition-duration: 0.3s;
+    transition-duration: 0.2s;
     transition-timing-function: ease-in;
     transition-delay: 0s;
 }
@@ -55,17 +54,61 @@ a:visited{
 }
 
 a:hover{
-    color: lightsteelblue;
+    color: white;
+}
+
+#profileInfo{
+    margin-left: 90px;
+    margin-top: 10px;
+    position: relative;
+    width: 600px;
+    height: 70px;
+}
+
+#profileName {
+    font-size: 1.1em;
+    position: relative;
+    color: midnightblue;
+    top: 0px;
+    margin-top: 0px;
+    margin-left: 20px;
+    display: inline-block;
+    transition-property: color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in;
+    transition-delay: 0s;
+    vertical-align: top;
+}
+
+#profileName:click{
+    color:midnightblue;
+}
+
+#profileName:visited{
+    color:midnightblue;
+}
+
+#profileName:hover{
+    color: midnightblue;
 }
 
 li {
-    margin-left: 20px;
     margin-top: 30px;
+    color: midnightblue;
     display: inline;
     width: 90px; 
-    color: white;
 }
 
 h1{
     font-size: 1.7em;
+}
+
+div{
+    /*
+    margin-top: 0px;*/
+    background-color: white;
+    width: 80%;
+    margin-bottom: 15px;
+    margin-left: 20px;
+    height: 70px;
 }

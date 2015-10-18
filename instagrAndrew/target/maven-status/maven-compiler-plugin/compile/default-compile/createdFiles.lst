@@ -1,9 +1,11 @@
+uk\ac\dundee\computing\aec\instagrAndrew\servlets\Comments.class
 uk\ac\dundee\computing\aec\instagrAndrew\stores\LoggedIn.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\Register.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\LogOut.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\Image.class
 uk\ac\dundee\computing\aec\instagrAndrew\models\Validation.class
 uk\ac\dundee\computing\aec\instagrAndrew\lib\AeSimpleSHA1.class
+uk\ac\dundee\computing\aec\instagrAndrew\models\CommentModel.class
 uk\ac\dundee\computing\aec\instagrAndrew\lib\CassandraHosts.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\Login.class
 uk\ac\dundee\computing\aec\instagrAndrew\models\PicModel.class

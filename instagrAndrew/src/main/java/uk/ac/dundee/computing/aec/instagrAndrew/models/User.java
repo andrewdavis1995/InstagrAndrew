@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.UUID;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.AeSimpleSHA1;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.Pic;
 
@@ -215,23 +216,31 @@ public class User {
         this.cluster = cluster;
     }
 
-    public ArrayList<String> getMatchingUsers(String name){
-        ArrayList<String> profileList = new ArrayList<String>();
+    public ArrayList<UserDetails> getMatchingUsers(String name){
+        ArrayList<UserDetails> profileList = new ArrayList<UserDetails>();
                 
         Session session = cluster.connect("instagrAndrew");
-        PreparedStatement ps = session.prepare("select login from userprofiles LIMIT 2000");
+        PreparedStatement ps = session.prepare("select login,first_name,last_name, profilePic from userprofiles LIMIT 2000");
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute(boundStatement);
         if (rs.isExhausted()) {
             System.out.println("No Images returned");
-            return new ArrayList<String>();
+            return new ArrayList<UserDetails>();
         } else {
             for (Row row : rs) {
                
                 String username = row.getString("login");
+                String firstname = row.getString("first_name");
+                String surname = row.getString("last_name");
+                UUID profPic = row.getUUID("profilePic");
+                
+                
                 if (username.toLowerCase().contains(name.toLowerCase())){
-                    profileList.add(username);
+                    
+                    UserDetails UD = new UserDetails(username, firstname, surname, profPic);
+                    
+                    profileList.add(UD);
                 }
                     
             }
