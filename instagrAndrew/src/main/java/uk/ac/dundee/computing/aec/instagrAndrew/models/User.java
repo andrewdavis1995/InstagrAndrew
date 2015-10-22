@@ -31,7 +31,7 @@ public class User {
         
     }
     
-    public Validation checkDetails(String fName, String surname, String email, String username, String password, String confPassword){
+    public Validation checkDetails(String fName, String surname, String email, String username, String password, String confPassword, boolean update){
         
         //check first name:
         
@@ -71,22 +71,23 @@ public class User {
                 return v;
             }
         
-        //check username
-            //  -   not blank
-            if (username.equals("")){ 
-                Validation v = new Validation("Please enter a valid username", false); 
-                return v;
+            if(!update){
+               //check username
+                //  -   not blank
+                if (username.equals("")){ 
+                    Validation v = new Validation("Please enter a valid username", false); 
+                    return v;
+                }
+                //  -   doesn't exist already - select from userprofiles where login = ?
+                    //  -   ? = username
+                    //  -   if returns 0, username is not taken --> valid
+                    //  -   else, invalid
+                boolean taken = checkUsername(username);
+                if (taken){
+                    Validation v = new Validation("Username Exists already. Please choose another", false); 
+                    return v;
+                }
             }
-            //  -   doesn't exist already - select from userprofiles where login = ?
-                //  -   ? = username
-                //  -   if returns 0, username is not taken --> valid
-                //  -   else, invalid
-            boolean taken = checkUsername(username);
-            if (taken){
-                Validation v = new Validation("Username Exists already. Please choose another", false); 
-                return v;
-            }
-                
         
         //check password
             //  -   not blank
@@ -125,12 +126,41 @@ public class User {
         }
     }
     
-    public UserDetails getProfileInfo(String user){
+     public boolean updateDetails(String fName, String surname, String email, String username, String password){
+        Session session = cluster.connect("instagrAndrew");
+        
+        AeSimpleSHA1 sha1handler=  new AeSimpleSHA1();
+        String EncodedPassword=null;
+        try {
+            EncodedPassword= sha1handler.SHA1(password);
+        }catch (UnsupportedEncodingException | NoSuchAlgorithmException et){
+            System.out.println("Can't check your password");
+            return false;
+        }        
+        
+        Set<String> em = new TreeSet<String>();
+        em.add(email);    
+        
+        PreparedStatement ps = session.prepare("UPDATE userprofiles SET first_name=?, last_name=?, email=?, password=? WHERE login=?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        fName, surname, em, EncodedPassword, username));
+        if (rs.isExhausted()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    
+    public UserDetails getProfileInfo(String user, boolean change){
         UserDetails ud = null;
         
         Session session = cluster.connect("instagrAndrew");
         System.out.println("USER = " + user);
-        PreparedStatement ps = session.prepare("select first_name,last_name,email from userprofiles WHERE login = ?");
+        PreparedStatement ps = session.prepare("select * from userprofiles WHERE login = ?");
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
@@ -141,13 +171,19 @@ public class User {
             for (Row row : rs) {
                String FN = row.getString("first_name");
                String SN = row.getString("last_name");
+               String usern = row.getString("login");
+               UUID PP = row.getUUID("profilepic");
+               String password = row.getString("password");
                Set<String> email = row.getSet("email", String.class);
                String banana = email.toString();
                
-               System.out.println(FN + " " + SN + " ----> " + banana);
+               System.out.println("PASSWORD IS: " + password);
                
-               ud = new UserDetails(FN, SN, email);
-               
+               if(!change){
+                   ud = new UserDetails(usern, FN, SN, PP, email);
+               }else{
+                   ud = new UserDetails(usern, FN, SN, password, email);
+               }
                break;
             }
         }
@@ -220,7 +256,7 @@ public class User {
         ArrayList<UserDetails> profileList = new ArrayList<UserDetails>();
                 
         Session session = cluster.connect("instagrAndrew");
-        PreparedStatement ps = session.prepare("select login,first_name,last_name, profilePic from userprofiles LIMIT 2000");
+        PreparedStatement ps = session.prepare("select login,first_name,last_name,profilePic from userprofiles");
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute(boundStatement);
@@ -231,12 +267,11 @@ public class User {
             for (Row row : rs) {
                
                 String username = row.getString("login");
-                String firstname = row.getString("first_name");
-                String surname = row.getString("last_name");
-                UUID profPic = row.getUUID("profilePic");
-                
                 
                 if (username.toLowerCase().contains(name.toLowerCase())){
+                    String firstname = row.getString("first_name");
+                    String surname = row.getString("last_name");
+                    UUID profPic = row.getUUID("profilePic");
                     
                     UserDetails UD = new UserDetails(username, firstname, surname, profPic);
                     
@@ -249,5 +284,28 @@ public class User {
         
         return profileList;
     }
-       
+ 
+    public UUID getProfilePicture(String username){
+        UUID toReturn = new UUID(0, 0);
+        
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("select profilePic from userprofiles WHERE login=?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        username));
+        if (rs.isExhausted()) {
+            System.out.println("No Image found");
+            return null;
+        } else {
+            for (Row row : rs) {
+                toReturn = row.getUUID("profilePic");
+                break;    
+            }
+        }
+        
+        return toReturn;
+    }
+    
 }

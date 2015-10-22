@@ -40,24 +40,23 @@ public class Search extends HttpServlet {
             throws ServletException, IOException {
         
         
-            String name = request.getParameter("searchText");
+        String name = request.getParameter("searchText");
 
-            if(name != null){
-                User us=new User();
-                us.setCluster(cluster);
+        if(name != null && name != ""){
+            User us=new User();
+            us.setCluster(cluster);
 
-                ArrayList<UserDetails> matches = us.getMatchingUsers(name);
+            ArrayList<UserDetails> matches = us.getMatchingUsers(name);
 
-                request.setAttribute("matches", matches);
-                request.setAttribute("searchedText", name);
+            request.setAttribute("matches", matches);
+            request.setAttribute("searchedText", name);
+        }else{
+            request.setAttribute("matches", null);
+            request.setAttribute("searchedText", null);
+        }
 
-                request.getRequestDispatcher("SearchResults.jsp").forward(request, response);            
-            }else{
-                //String hashtag = request.getParameter("Hashtag");
-                
-                //search for images with matching hashtag
-                
-            }
+        request.getRequestDispatcher("SearchResults.jsp").forward(request, response);            
+
     }
               
               

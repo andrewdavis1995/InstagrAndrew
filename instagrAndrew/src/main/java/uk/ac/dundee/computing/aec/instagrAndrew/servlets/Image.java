@@ -58,8 +58,6 @@ public class Image extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Cluster cluster;
     private HashMap CommandsMap = new HashMap();
-    
-    
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -119,7 +117,7 @@ public class Image extends HttpServlet {
         request.setAttribute("Pics", lsPics);
         User usr = new User();
         usr.setCluster(cluster);
-        UserDetails deets = usr.getProfileInfo(user);
+        UserDetails deets = usr.getProfileInfo(user, false);
         //get email, first name and surname - function in the User file
         request.setAttribute("EmailAddress", deets.getEmail());
         request.setAttribute("Full_Name", deets.getName());
@@ -151,6 +149,8 @@ public class Image extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
+        System.out.println("MADE IT TO DOPOST");
+        
         for (Part part : request.getParts()) {
             
             String type = part.getContentType();
@@ -159,6 +159,7 @@ public class Image extends HttpServlet {
                 String filename = part.getSubmittedFileName();
 
                 String thing = request.getParameter("profilePic");
+                System.out.println("PROFILE PIC is: " + thing);
                 
                 boolean profpic;
                 profpic = thing != null;
@@ -226,13 +227,15 @@ public class Image extends HttpServlet {
                         tm.setTint("None");
                     }
                     
+                    
                     tm.insertPic(b, type, filename, username, hashtag, profpic);
 
+                    
                     is.close();
                 }
                 
                 if(profpic){
-                    response.sendRedirect(username + "?type=user");
+                    response.sendRedirect("/InstagrAndrew/profile/" + username);
                 }else{
                     RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
                     rd.forward(request, response);

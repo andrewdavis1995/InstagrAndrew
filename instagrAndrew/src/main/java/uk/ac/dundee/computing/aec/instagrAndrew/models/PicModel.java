@@ -129,6 +129,10 @@ public class PicModel {
 
     public void insertPic(byte[] b, String type, String name, String user, String h, boolean profilePic) {
              
+        
+        System.out.println("MADE IT HERE!");
+        System.out.println(user + "----> " + profilePic);
+        
         try {
             Convertors convertor = new Convertors();
 
@@ -179,11 +183,7 @@ public class PicModel {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrAndrew/" + picid));
             BufferedImage thumbnail = doTints(BI, this.tintValue, this.greyValue, true);
-            
-            //if(this.vignetteOnOff){
-            //    thumbnail = addVignette(thumbnail);
-            //}
-            
+                        
             if(this.contrastValue != 0f){
                 thumbnail = doContrast(thumbnail, this.contrastValue);
             }
@@ -212,7 +212,7 @@ public class PicModel {
             }
             
             //if(this.vignetteOnOff){
-            //    processed = addVignette(processed);
+            //  processed = addVignette(processed);
             //}
             
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -246,12 +246,15 @@ public class PicModel {
     
     /*public BufferedImage addVignette (BufferedImage image){
         
+        System.out.println("IT'S HERE");
+        
         //load source images
         try{
-            File img = new File("../developmentImages/cover.png");
-           
+            File img = new File("developmentImages/cover.png");
+            String fullPath = img.getAbsolutePath();
+            System.out.println("FILE PATH: " + fullPath);
             
-            BufferedImage overlay = ImageIO.read(img);
+            //BufferedImage overlay = ImageIO.read(img);
                         
             int w = image.getWidth();
             int h = image.getHeight();
@@ -259,10 +262,12 @@ public class PicModel {
             // create the new image, canvas size is the max. of both image sizes
             BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         
-            Image tmp = overlay.getScaledInstance(w, h, BufferedImage.SCALE_FAST);
+            Image tmp = cover.getScaledInstance(w, h, BufferedImage.SCALE_FAST);
             BufferedImage buffered = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
             buffered.getGraphics().drawImage(tmp, 0, 0, null);
            
+            
+            System.out.println("NOW");
             
             Graphics g = combined.getGraphics();
             
@@ -270,18 +275,26 @@ public class PicModel {
             g.drawImage(tmp, 0, 0, null);
             
             
+            System.out.println("THIS BIT");
+            
             // Save as new image
             ImageIO.write(combined, "PNG", new File("/tmpFolder/tmp___Image1234.png"));
             
             File returned = new File("/tmpFolder/tmp___Image1234.png");
             BufferedImage output = ImageIO.read(returned);
             
+            
+            System.out.println("END");
+            
+            
             try{
                 returned.delete();
             }catch(Exception e){}
                 
             return output;
-        }catch(Exception e){}
+        }catch(Exception e){
+            System.out.println("ERROR: " + e.getMessage());
+        }
                                
         return image;
     }*/
@@ -483,6 +496,7 @@ public class PicModel {
                         Pic toAdd = new Pic();
                         toAdd.setUUID(uuid);
                         toAdd.setUser(us);
+                        toAdd.setHashtag(fullString);
                         picList.add(toAdd);
                         break;
                     }

@@ -30,12 +30,12 @@
                 <ul>
                     <br>
                     <h3 style="color: white;">REGISTER:</h3><br>
-                    <li style="margin-left: 15px; padding-bottom: 15px;">First Name<br><input type="text" name="forename" id = "FN"></li><br>
-                    <li style="margin-left: 15px; padding-bottom: 15px;">Surname<br><input type="text" name="surname" id = "SN"></li><br>
-                    <li style="margin-left: 15px; padding-bottom: 15px;">Email Address<br><input type="text" name="email" id = "email"></li><br>
-                    <li style="margin-left: 15px; padding-bottom: 15px;">User Name<br><input type="text" name="username" id = "username"></li><br>
-                    <li style="margin-left: 15px; padding-bottom: 15px;">Password<br><input type="password" name="password" id = "pass"></li><br>
-                    <li style="margin-left: 15px; padding-bottom: 15px;">Confirm Password<br><input type="password" name="confirmPassword" id = "confPass"></li><br>
+                    <li style="margin-left: 15px; padding-bottom: 15px;">First Name<br><input autocomplete="off" type="text" name="forename" id = "FN"></li><br>
+                    <li style="margin-left: 15px; padding-bottom: 15px;">Surname<br><input autocomplete="off" type="text" name="surname" id = "SN"></li><br>
+                    <li style="margin-left: 15px; padding-bottom: 15px;">Email Address<br><input autocomplete="off" type="text" name="email" id = "email"></li><br>
+                    <li style="margin-left: 15px; padding-bottom: 15px;">User Name<br><input autocomplete="off" type="text" name="username" id = "username"></li><br>
+                    <li style="margin-left: 15px; padding-bottom: 15px;">Password<br><input autocomplete="off" type="password" name="password" id = "pass"></li><br>
+                    <li style="margin-left: 15px; padding-bottom: 15px;">Confirm Password<br><input autocomplete="off" type="password" name="confirmPassword" id = "confPass"></li><br>
                 </ul>
                 <br/>
                 <input type="submit" value="Register" style="margin-left: 15px; margin-bottom: 15px;"> 

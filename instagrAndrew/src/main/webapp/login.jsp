@@ -27,8 +27,8 @@
                 <ul>
                     <br>
                     <h2 style="color: white;">LOGIN</h2>
-                    <br><li style="margin-left: 15px; padding-bottom: 15px;">User Name <input type="text" name="username"></li><br>
-                    <li style="margin-left: 26px; padding-top: 15px;">Password <input type="password" name="password"></li>
+                    <br><li style="margin-left: 15px; padding-bottom: 15px;">User Name <input autocomplete="off" type="text" name="username"></li><br>
+                    <li style="margin-left: 26px; padding-top: 15px;">Password <input autocomplete="off" type="password" name="password"></li>
                 </ul>
                 <br/>
                 <input type="submit" value="Login" style="margin-left: 30px; margin-bottom: 15px; width: 150px"> 

@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="uk.ac.dundee.computing.aec.instagrAndrew.models.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="uk.ac.dundee.computing.aec.instagrAndrew.stores.*" %>
 <!DOCTYPE html>
@@ -26,26 +27,30 @@
                     <%
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
                                                 
-                        if (lg != null) {
+                        if (lg != null ) {
                             String UserName = lg.getUsername();                        
                             if (lg.getlogedin()) {
-                    %>
+                                User us = new User();
+                        %>
 
-                
-                <li><a href="/InstagrAndrew/Images/<%=lg.getUsername()%>?type=user">Your Profile</a></li>
-                
-                <form action="LogOut" method="POST">
-                    <input type="submit" value="Log Out" style="margin-left: 30px; margin-bottom: 15px; width: 150px"> 
-                </form>
-                
-                
-                
-                    <%}
-                            }else{
-                                %>
-                <li><a href="register.jsp">Register</a></li>
-                <li><a href="login.jsp">Login</a></li>
-                <%
+                <div style="position: absolute; left: calc(100% - 200px); width: 200px; height: 85px; float: right; margin-top: 0; top: 0;"> 
+                    <form action="Profile" method="POST">
+                        <input type="Image" name="Submit" src="developmentImages/yourProfile.png" style="width:220px; height: 65px; float: right; margin-top: 0; top: 0">
+                        <input type="hidden" name = "username" id="username" value="<%=UserName%>">
+                    </form>
+                </div>  
+                            <form action="LogOut" method="POST">
+                                <input type="submit" value="Log Out" style="margin-left: 30px; margin-bottom: 15px; width: 150px"> 
+                            </form>
+
+
+
+                                <%}
+                                        }else{
+                                            %>
+                            <li><a href="register.jsp">Register</a></li>
+                            <li><a href="login.jsp">Login</a></li>
+                            <%
 
                     }
                 %>
@@ -59,8 +64,8 @@
                 <form method="POST" action="Login">
                     <ul>
                         <h2 style="color: white;">LOGIN</h2>
-                        <br><li style="margin-left: 15px; margin-bottom: 15px; font-size: 18px">User Name <input type="text" name="username"></li><br><br>
-                        <li style="margin-left: 26px; margin-top: 15px; font-size: 18px">Password <input type="password" name="password"></li>
+                        <br><li style="margin-left: 15px; margin-bottom: 15px; font-size: 18px">User Name <input autocomplete="off" type="text" name="username"></li><br><br>
+                        <li style="margin-left: 26px; margin-top: 15px; font-size: 18px">Password <input autocomplete="off" type="password" name="password"></li>
                     </ul>
                     <input type="image" style="margin-left: 50px; margin-bottom: 15px; width: 260px; height: 40px; background: none; margin-top: 30px;" src="developmentImages/login button.png" onMouseOver="this.src='developmentImages/login button(hover).png'" onMouseOut="this.src='developmentImages/login button.png'"> 
                 </form>

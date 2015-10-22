@@ -118,14 +118,14 @@ body{
 }
 
 nav{
-    background-color: #313135;
+    background-color: black;
     color: white;
     list-style-type: none;
     height: 65px;
     width: 100%;
     vertical-align: middle;
     position: fixed;
-    top: 15px;
+    top: 0;
     left: 0;
 }
 

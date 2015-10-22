@@ -51,9 +51,8 @@ public class LogOut extends HttpServlet {
         User us=new User();
         us.setCluster(cluster);
         HttpSession session=request.getSession();
-        LoggedIn lg = null;
       
-        session.setAttribute("LoggedIn", lg);
+        session.setAttribute("LoggedIn", null);
         RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
         rd.forward(request,response);
         

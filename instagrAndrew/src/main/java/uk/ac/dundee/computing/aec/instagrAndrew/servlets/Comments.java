@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.CommentModel;
+import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.LoggedIn;
 
 /**
@@ -48,9 +49,15 @@ public class Comments extends HttpServlet {
             throws ServletException, IOException {
                 
         String action = request.getParameter("whatToDo");
-        System.out.println("ACTION: " + action);
+        Boolean reload = false;
+        try{
+            reload = (Boolean)request.getAttribute("reload");
+        }catch(Exception e){}
         
-        if(action.equals("post")){
+        System.out.println("ACTION: " + action);
+        System.out.println("RELOAD: " + reload);
+        
+        if(action.equals("post") && reload == null){
             postComment(request, response);
         }else{
             getComments(request, response);
@@ -87,7 +94,6 @@ public class Comments extends HttpServlet {
         
             cm.insertComment(id, username, content);
             
-                        
            
             String hashtag = request.getParameter("hashtags");
             request.setAttribute("hashtags", hashtag);
@@ -118,8 +124,10 @@ public class Comments extends HttpServlet {
                 System.out.println(things.nextElement());
             }
             
+            request.setAttribute("reload", true);
             RequestDispatcher rd=request.getRequestDispatcher("displayImage.jsp");
-            rd.forward(request,response);                      
+            rd.forward(request,response);
+            //response.sendRedirect("displayImage.jsp");
         }
         
        
@@ -142,18 +150,27 @@ public class Comments extends HttpServlet {
             System.out.println(e.nextElement());
         }
         
+        String user = request.getParameter("username");
+        request.setAttribute("username", user);
+        
         String hashtag = request.getParameter("hashtags");
         request.setAttribute("hashtags", hashtag);
 
         String PP = request.getParameter("profPic");
-        UUID profpic = UUID.fromString(PP);
-        request.setAttribute("ProfPic", profpic);
+        try{
+            UUID profpic = UUID.fromString(PP);
+            request.setAttribute("ProfPic", profpic);
+        }catch(Exception ex){
+            //call method to find profilePic
+            User us = new User();
+            us.setCluster(cluster);
+            UUID profpic = us.getProfilePicture(user);
+            request.setAttribute("ProfPic", profpic);            
+        }
         
         String path = request.getParameter("imageSrc");
         request.setAttribute("imageSource", path);
         
-        String user = request.getParameter("username");
-        request.setAttribute("username", user);
         
         CommentModel cm = new CommentModel();
         cm.setCluster(cluster);
@@ -194,8 +211,6 @@ public class Comments extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getParameter("imageSrc");
-        System.out.println(path);
-        path = (String)request.getAttribute("imageSrc");
         System.out.println(path);
         System.out.println("THIS IS RUNNING!");
         processRequest(request, response);

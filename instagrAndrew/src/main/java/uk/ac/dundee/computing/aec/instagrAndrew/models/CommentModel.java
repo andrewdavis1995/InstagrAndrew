@@ -59,27 +59,24 @@ public class CommentModel {
         
         
         Session session = cluster.connect("instagrAndrew");
-        PreparedStatement ps = session.prepare("select image_id,content,username,date from comments");
+        PreparedStatement ps = session.prepare("select content,username,date from comments where image_id=? ORDER BY date DESC");
        
         BoundStatement boundStatement = new BoundStatement(ps);
         
         ResultSet rs = null;
         
         rs = session.execute( // this is where the query is executed
-                boundStatement.bind());
+                boundStatement.bind(id));
         if (rs.isExhausted()) {
             System.out.println("No Images returned");
             return null;
         } else {
             for (Row row : rs) {
-                java.util.UUID currentID = row.getUUID("image_id");
                 String name = row.getString("username");
                 String words = row.getString("content");
-                
-                if(id.equals(currentID)){
-                    CommentModel cm = new CommentModel(words, name);
-                    comments.add(cm);
-                }
+                //date
+                CommentModel cm = new CommentModel(words, name);
+                comments.add(cm);                
             }
         }
         
@@ -90,27 +87,16 @@ public class CommentModel {
     
     public boolean insertComment(UUID imageID, String username, String content){
         
-        //http://alvinalexander.com/java/java-timestamp-example-current-time-now
-        // 1) create a java calendar instance
-        Calendar calendar = Calendar.getInstance();
-
-        // 2) get a java.util.Date from the calendar instance.
-        //    this date will represent the current instant, or "now".
-        java.util.Date now = calendar.getTime();
-        
-        Timestamp time = new Timestamp(now.getTime());
-        
-        Convertors convertor = new Convertors();
-        java.util.UUID commentID = convertor.getTimeUUID();
+        UUID time = java.util.UUID.fromString(new com.eaio.uuid.UUID().toString());
         
         Session session = cluster.connect("instagrAndrew");
-        PreparedStatement ps = session.prepare("insert into comments (image_id, username, content, comment_id, date) Values(?,?,?,?,?)");
+        PreparedStatement ps = session.prepare("insert into comments (image_id, username, content, date) Values (?,?,?,?)");
        
         BoundStatement boundStatement = new BoundStatement(ps);
         
         session.execute( // this is where the query is executed
                 boundStatement.bind( // here you are binding the 'boundStatement'
-                        imageID, username, content, commentID, time));
+                        imageID, username, content, time));
         //We are assuming this always works.  Also a transaction would be good here !
         
         return true;

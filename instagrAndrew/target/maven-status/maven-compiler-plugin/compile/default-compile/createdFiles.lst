@@ -3,6 +3,7 @@ uk\ac\dundee\computing\aec\instagrAndrew\stores\LoggedIn.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\Register.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\LogOut.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\Image.class
+uk\ac\dundee\computing\aec\instagrAndrew\servlets\Profile.class
 uk\ac\dundee\computing\aec\instagrAndrew\models\Validation.class
 uk\ac\dundee\computing\aec\instagrAndrew\lib\AeSimpleSHA1.class
 uk\ac\dundee\computing\aec\instagrAndrew\models\CommentModel.class
@@ -11,6 +12,7 @@ uk\ac\dundee\computing\aec\instagrAndrew\servlets\Login.class
 uk\ac\dundee\computing\aec\instagrAndrew\models\PicModel.class
 uk\ac\dundee\computing\aec\instagrAndrew\lib\Keyspaces.class
 uk\ac\dundee\computing\aec\instagrAndrew\models\UserDetails.class
+uk\ac\dundee\computing\aec\instagrAndrew\servlets\UpdateProfile.class
 uk\ac\dundee\computing\aec\instagrAndrew\models\User.class
 uk\ac\dundee\computing\aec\instagrAndrew\stores\Pic.class
 uk\ac\dundee\computing\aec\instagrAndrew\servlets\SearchHashtag.class

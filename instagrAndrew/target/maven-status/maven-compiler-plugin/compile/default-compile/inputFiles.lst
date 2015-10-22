@@ -2,6 +2,7 @@ C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\servlets\SearchHashtag.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\lib\Keyspaces.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\lib\AeSimpleSHA1.java
+C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\servlets\UpdateProfile.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\servlets\Login.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\filters\ProtectPages.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\stores\Pic.java
@@ -16,4 +17,5 @@ C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\models\CommentModel.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\lib\CassandraHosts.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\models\UserDetails.java
+C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\servlets\Profile.java
 C:\Users\Andrew\Documents\NetBeansProjects\instagrAndrew\instagrAndrew\src\main\java\uk\ac\dundee\computing\aec\instagrAndrew\servlets\Image.java

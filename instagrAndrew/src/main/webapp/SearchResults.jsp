@@ -3,6 +3,7 @@
     Created on : 03-Oct-2015, 11:48:20
     Author     : Andrew
 --%>
+<%@page import="uk.ac.dundee.computing.aec.instagrAndrew.stores.LoggedIn"%>
 <%@page import="uk.ac.dundee.computing.aec.instagrAndrew.models.UserDetails"%>
 <%@page import="java.util.ArrayList" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -32,17 +33,45 @@
             if(profiles != null && profiles.size() > 0){
                 for(int i = 0; i < profiles.size(); i++){
                     
-                    String path = "/InstagrAndrew/Images/" + profiles.get(i).getUsername()+ "?type=other&search=" + profiles.get(i).getUsername();
+                    String username = profiles.get(i).getUsername();
+                    String path = "/InstagrAndrew/profile/" + username;
+                    LoggedIn lg = (LoggedIn)session.getAttribute("LoggedIn");
+                    String currentUser = "";
+                    if(lg!= null){
+                        currentUser = lg.getUsername();
+                    }
         %>
-            <div>
-                <a href = "<%=path%>"><img style="left: 0px; position: absolute; margin-left:40px; width: 70px; height: 70px;" src="/InstagrAndrew/Image/<%=profiles.get(i).getProfilePic()%>"></a>
-                <div id ="profileInfo">
-                    <li><a id="profileName" href = "<%=path%>" > <%=profiles.get(i).getName()%></a></li><br>
-                    <p id="profileName"><%=profiles.get(i).getUsername()%></p>
-                </div>
-            </div>
+                    <div>
+                        
+                        <form method="POST" action="Profile"> 
+                            <%if(profiles.get(i).getProfilePic() != null){ %>
+                                <input type="image" style="left: 40px; width:70px; height: 70px; position: absolute;" src="/InstagrAndrew/Image/<%=profiles.get(i).getProfilePic()%>" value="" alt="">
+                            <% }else{ %>
+                                <input type="image" style="left: 40px; width:70px; height: 70px; position: absolute;" src="developmentImages/question.png" value="" alt="">
+                            <% } %>
+                            <input type="hidden" name="username" id="username" value="<%=profiles.get(i).getUsername()%>">
+                        </form>
+                       
+                        <div id ="profileInfo">
+                          <%if (username.equals(currentUser)) {
+                                %>
+                                    <h3 style="color: red;">YOUR PROFILE</h3>
+                                <%
+                            }else{
+                                %>
+                                    <h3 style="color: black;"><%=profiles.get(i).getUsername()%></h3>
+                                <%
+                            }
+                            %>
+                            <p id="profileName"><%=username%></p>
+                        </div>
+                    </div>  
         <%
                 }
+            }else{
+            %>
+                <h3>No Profiles found</h3>
+            <%
             }
         %>
         

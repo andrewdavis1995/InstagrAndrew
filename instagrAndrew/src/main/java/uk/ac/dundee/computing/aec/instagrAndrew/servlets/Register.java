@@ -56,7 +56,7 @@ public class Register extends HttpServlet {
         
         User us=new User();
         us.setCluster(cluster);
-        Validation isValid = us.checkDetails(fName, surname, email, username, password, confPass);
+        Validation isValid = us.checkDetails(fName, surname, email, username, password, confPass, false);
         
         if(isValid.getValidity()){
             us.RegisterUser(fName, surname, email, username, password);
