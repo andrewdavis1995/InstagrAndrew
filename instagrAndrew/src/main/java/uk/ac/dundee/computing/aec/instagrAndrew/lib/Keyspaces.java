@@ -25,15 +25,17 @@ public final class Keyspaces {
                     + " processed blob,"
                     + " imagelength int,"
                     + " thumblength int,"
-                    + "  processedlength int,"
-                    + " type  varchar,"
-                    + " name  varchar,"
+                    + " processedlength int,"
+                    + " type varchar,"
+                    + " name varchar,"
+                    + " hashtag varchar,"
                     + " PRIMARY KEY (picid)"
                     + ")";
             String Createuserpiclist = "CREATE TABLE if not exists instagrAndrew.userpiclist (\n"
                     + "picid uuid,\n"
                     + "user varchar,\n"
                     + "pic_added timestamp,\n"
+                    + " hashtag varchar,\n"
                     + "PRIMARY KEY (user,pic_added)\n"
                     + ") WITH CLUSTERING ORDER BY (pic_added desc);";
             String CreateAddressType = "CREATE TYPE if not exists instagrAndrew.address (\n"
@@ -43,12 +45,27 @@ public final class Keyspaces {
                     + "  );";
             String CreateUserProfile = "CREATE TABLE if not exists instagrAndrew.userprofiles (\n"
                     + "      login text PRIMARY KEY,\n"
-                     + "     password text,\n"
+                    + "      password text,\n"
+                    + "      profilepic UUID,\n"
                     + "      first_name text,\n"
                     + "      last_name text,\n"
                     + "      email set<text>,\n"
                     + "      addresses  map<text, frozen <address>>\n"
                     + "  );";
+            String CreateComments = "CREATE TABLE if not exists instagrAndrew.comments (\n"
+                    + "      image_id UUID,\n"
+                    + "      date time_UUID,\n"
+                    + "      content text,\n"
+                    + "      username text,\n"
+                    + "      PRIMARY KEY (image_id, date))\n"
+                    + "  );";
+            
+            String CreateLike = "CREATE TABLE if not exists instagrAndrew.likes (\n"
+                    + "      image_id UUID,\n"
+                    + "      liker text,\n"
+                    + "      PRIMARY KEY (image_id, liker))\n"
+                    + "  );";
+            
             Session session = c.connect();
             try {
                 PreparedStatement statement = session
@@ -69,7 +86,7 @@ public final class Keyspaces {
                 SimpleStatement cqlQuery = new SimpleStatement(CreatePicTable);
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create tweet table " + et);
+                System.out.println("Can't create Pic table " + et);
             }
             System.out.println("" + Createuserpiclist);
 
@@ -79,6 +96,7 @@ public final class Keyspaces {
             } catch (Exception et) {
                 System.out.println("Can't create user pic list table " + et);
             }
+            
             System.out.println("" + CreateAddressType);
             try {
                 SimpleStatement cqlQuery = new SimpleStatement(CreateAddressType);
@@ -86,6 +104,7 @@ public final class Keyspaces {
             } catch (Exception et) {
                 System.out.println("Can't create Address type " + et);
             }
+            
             System.out.println("" + CreateUserProfile);
             try {
                 SimpleStatement cqlQuery = new SimpleStatement(CreateUserProfile);
@@ -93,10 +112,27 @@ public final class Keyspaces {
             } catch (Exception et) {
                 System.out.println("Can't create Address Profile " + et);
             }
+            
+            System.out.println("" + CreateComments);
+            try {
+                SimpleStatement cqlQuery = new SimpleStatement(CreateComments);
+                session.execute(cqlQuery);
+            } catch (Exception et) {
+                System.out.println("Can't create Comments " + et);
+            }
+            session.close();
+            
+            System.out.println("" + CreateLike);
+            try {
+                SimpleStatement cqlQuery = new SimpleStatement(CreateLike);
+                session.execute(cqlQuery);
+            } catch (Exception et) {
+                System.out.println("Can't create Comments " + et);
+            }
             session.close();
 
         } catch (Exception et) {
-            System.out.println("Other keyspace or coulm definition error" + et);
+            System.out.println("Other keyspace or column definition error" + et);
         }
 
     }

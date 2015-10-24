@@ -35,7 +35,7 @@
             </ul>
         </nav>
  
-        <div style="width: 40%; display: inline-block;float: left; margin-left: 3%;">
+        <div style="width: 40%; display: inline-block;float: left; margin-left: 2%;">
             <h1 style = "color: white; margin-left: 2%">SELECT FILE TO UPLOAD</h1>  
         
         
@@ -94,38 +94,42 @@
             
         </div>
             
-            <div style="float: right; margin-right: 3%; width: 45%; display: inline-block;">
+            <div style="float: right; margin-right: 2%; margin-top: 9%; width: 50%; display: inline-block;">
             
                 <h2 style="color:white;">FILTERS</h2>
                 
-            <div style="display: inline-block; margin-right: 12%;">
+            <div style="display: inline-block; margin-right: 5%;">
                 <h3>Tint Color:</h3>
                 <input type="radio" value="None" name="Filter" checked="true">None<br>
                 <input type="radio" value="Red" name="Filter">Red<br>
                 <input type="radio" value="Blue" name="Filter">Blue<br>
                 <input type="radio" value="Yellow" name="Filter">Yellow<br>
                 <input type="radio" value="Green" name="Filter">Green<br>
-                <br><br>
+                <br><br><br>
             </div>
             
-            <div style="display: inline-block; margin-right: 12%">
+            <div style="display: inline-block; margin-right: 5%">
                 <h3>Greyscale:</h3>
                 <input type="radio" value="No" name="Greyscale" checked="true">No<br>
                 <input type="radio" value="Yes" name="Greyscale">Yes<br>
-                <br><br><br><br><br>
+                <br><br><br><br><br><br>
+            </div>
+                
+                
+            <div style="display: inline-block; margin-right: 5%">
+                <h3>Rotation</h3>
+                <input type="radio" value="None" name="Rotation" checked="true">No Rotation<br>
+                <input type="radio" value="90CW" name="Rotation">Rotate 90&#176 Clockwise<br>
+                <input type="radio" value="180" name="Rotation">Rotate 180&#176<br>
+                <input type="radio" value="90ACW" name="Rotation">Rotate 90&#176 Anti-Clockwise<br><br>
+                <input type="radio" value="None" name="Flip" checked="true">No Flip<br>
+                <input type="radio" value="HorizontalFlip" name="Flip">Flip Horizontally<br>
+                <input type="radio" value="VerticalFlip" name="Flip">Flip Vertically
+                
             </div>
             
             
-            <!--
-            CREATE TABLE comments (user_name varchar PRIMARY KEY, content varchar, image_id varchar);
-            -->
-            
-            <!--<div style="display: inline-block; margin-left: 20px">
-                <h3>Vignette:</h3>
-                <input type="radio" value="No" name="Vignette" checked="true">No<br>
-                <input type="radio" value="Yes" name="Vignette">Yes<br>
-                <br><br><br>
-            </div>-->
+                
     
             <div style="display: inline-block;">
                 <h3>Contrast:</h3>
@@ -135,7 +139,7 @@
                 <input type="radio" value="4" name="Contrast" checked="true">No Change<br>
                 <input type="radio" value="3" name="Contrast">+15%<br>
                 <input type="radio" value="5" name="Contrast">+30%<br>
-                <input type="radio" value="6" name="Contrast">+45%<br>
+                <input type="radio" value="6" name="Contrast">+45%<br><br>
             </div>
             
             <br><br>
@@ -180,18 +184,18 @@
 
             function removeHashtag(index){
                 
-                alert(index);
+                //alert(index);
                 
                 if(index == 1){
                                         
-                    alert("2 LEFT");
+                    //alert("2 LEFT");
                     
                     var tmp = document.getElementById("hiddenHT2").value;
                     var tmp2 = document.getElementById("hiddenHT3").value;
                     
                     
-                    alert(tmp);
-                    alert(tmp2);
+                    //alert(tmp);
+                    //alert(tmp2);
                     
                     document.getElementById("hiddenHT3").value = "";
                     document.getElementById("HT3").value = "";
@@ -200,7 +204,7 @@
                     document.getElementById("HT2").innerHTML = tmp2;
                     document.getElementById("hiddenHT1").value = tmp;
                     document.getElementById("HT1").innerHTML = tmp;
-                    hashIndex = 1;
+                    hashIndex--;
                     
                     
                 }else if(index == 2){
@@ -213,7 +217,7 @@
                     document.getElementById("HT3").style.display = "none";
                     document.getElementById("hiddenHT2").value = tmp;
                     document.getElementById("HT2").innerHTML = tmp;
-                    hashIndex = 2;
+                    hashIndex--;
                     
                 }else if(index  == 3){
                     
@@ -222,7 +226,7 @@
                     document.getElementById("hiddenHT3").value = "";
                     document.getElementById("HT3").innerHTML = "";
                     document.getElementById("HT3").style.display = "none";
-                    hashIndex = 3;
+                    hashIndex--;
                 }
             }
 

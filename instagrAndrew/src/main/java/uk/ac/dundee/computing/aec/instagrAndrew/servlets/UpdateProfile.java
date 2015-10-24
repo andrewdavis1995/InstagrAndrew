@@ -78,7 +78,9 @@ public class UpdateProfile extends HttpServlet {
                     request.setAttribute("UserDetails", UD);
                     val = new Validation("SUCCESS", true);
                 }else{
-                    val = new Validation("Password doesn't match", false);
+                    val = new Validation("Old Password is incorrect", false);
+                    UserDetails UD = us.getProfileInfo(user, true);
+                    request.setAttribute("UserDetails", UD);
                 }
                 
             }else{

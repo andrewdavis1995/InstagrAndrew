@@ -106,4 +106,52 @@ public class CommentModel {
         this.cluster = cluster;
     }
    
+    
+    public ArrayList<String> getLikes(UUID id){
+        ArrayList<String> likers = new ArrayList<String>();
+        
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("select liker from likes where image_id =? order by liker ASC");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        id));
+        if (rs.isExhausted()) {
+            System.out.println("NO LIKES");
+            return null;
+        } else {
+            for (Row row : rs) {
+                String name = row.getString("liker");
+                likers.add(name);
+            }
+        }
+        
+        System.out.println("LIKERS: " + likers);
+        
+        return likers;
+    }
+    
+    public void deleteLike(String user, UUID image){
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("delete from likes WHERE liker=? AND image_id=?");
+       
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        user, image));
+    }
+    
+    public void insertLike(String user, UUID image){
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("insert into likes (image_id, liker) VALUES (?,?)");
+       
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        image, user));
+    }
+    
 }

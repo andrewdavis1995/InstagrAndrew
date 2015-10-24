@@ -37,8 +37,7 @@ public class SearchHashtag extends HttpServlet {
     }
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
+            throws ServletException, IOException {        
         
             String name = request.getParameter("searchText");
 
@@ -49,13 +48,15 @@ public class SearchHashtag extends HttpServlet {
                 pm.setCluster(cluster);
 
                 java.util.LinkedList<Pic> matches = pm.getMatchingPics(name);
+                
+                System.out.println("LENGTH OF MATCHES: " + matches.size());
 
                 request.setAttribute("matches", matches);
                 request.setAttribute("searchedText", name);
 
                 request.getRequestDispatcher("hashtagSearch.jsp").forward(request, response);            
             }else{
-                //String hashtag = request.getParameter("Hashtag");
+                String hashtag = request.getParameter("Hashtag");
                 
                 //search for images with matching hashtag
                 System.out.println("Cannot perform Search");

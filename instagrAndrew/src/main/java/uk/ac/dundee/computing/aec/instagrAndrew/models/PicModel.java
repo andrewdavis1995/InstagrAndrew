@@ -40,6 +40,9 @@ import java.awt.Color;
 import org.imgscalr.Scalr.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.*;
@@ -52,11 +55,12 @@ public class PicModel {
     float tintValue;
     float greyValue;
     float contrastValue;
+    Rotation flipValue;
+    Rotation rotateValue;
     //boolean vignetteOnOff;
     
 
     public void PicModel() {
-
     }
 
     public void setCluster(Cluster cluster) {
@@ -126,6 +130,37 @@ public class PicModel {
         }
     }
     
+     public void setRotate(String r){
+        switch (r) {
+            case "None":
+                this.rotateValue = null;
+                break;
+            case "90CW":
+                this.rotateValue = Rotation.CW_90;
+                break;
+            case "180":
+                this.rotateValue = Rotation.CW_180;
+                break;            
+            default:
+                this.rotateValue = Rotation.CW_270;
+                break;
+        }
+    }  
+     
+     public void setFlip(String f){
+        switch (f) {
+            case "None":
+                this.flipValue = null;
+                break;
+            case "HorizontalFlip":
+                this.flipValue = Rotation.FLIP_HORZ;
+                break;            
+            default:
+                this.flipValue = Rotation.FLIP_VERT;
+                break;
+        }
+    }  
+    
 
     public void insertPic(byte[] b, String type, String name, String user, String h, boolean profilePic) {
              
@@ -146,10 +181,10 @@ public class PicModel {
             FileOutputStream output = new FileOutputStream(new File("/var/tmp/instagrAndrew/" + picid));
 
             output.write(b);
-            byte []  thumb = picresize(picid.toString(),types[1]);
+            byte []  thumb = picresize(picid.toString(),types[1], profilePic);
             int thumblength= thumb.length;
             ByteBuffer thumbbuf=ByteBuffer.wrap(thumb);
-            byte[] processedb = picdecolour(picid.toString(),types[1]);
+            byte[] processedb = picdecolour(picid.toString(),types[1], profilePic);
             ByteBuffer processedbuf=ByteBuffer.wrap(processedb);
             int processedlength=processedb.length;
             Session session = cluster.connect("instagrAndrew");
@@ -179,13 +214,21 @@ public class PicModel {
         }
     }
 
-    public byte[] picresize(String picid,String type) {
+    public byte[] picresize(String picid,String type, boolean profPic) {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrAndrew/" + picid));
-            BufferedImage thumbnail = doTints(BI, this.tintValue, this.greyValue, true);
-                        
+            BufferedImage thumbnail = doTints(BI, this.tintValue, this.greyValue, true, profPic);
+                                    
             if(this.contrastValue != 0f){
                 thumbnail = doContrast(thumbnail, this.contrastValue);
+            }
+            
+            
+            if(this.rotateValue != null){
+                thumbnail = rotate(thumbnail, rotateValue, null);
+            }
+            if(this.flipValue != null){
+                thumbnail = rotate(thumbnail, flipValue, null);
             }
             
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -201,19 +244,24 @@ public class PicModel {
         return null;
     }
     
-    public byte[] picdecolour(String picid,String type) {
+    public byte[] picdecolour(String picid,String type, boolean profPic) {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrAndrew/" + picid));
-            BufferedImage processed = doTints(BI, this.tintValue, this.greyValue, false);
+            BufferedImage processed = doTints(BI, this.tintValue, this.greyValue, false, profPic);
             
             
             if(this.contrastValue != 0f){
                 processed = doContrast(processed, this.contrastValue);
             }
             
-            //if(this.vignetteOnOff){
-            //  processed = addVignette(processed);
-            //}
+            
+            if(this.rotateValue != null){
+                processed = rotate(processed, rotateValue, null);
+            }
+            if(this.flipValue != null){
+                processed = rotate(processed, flipValue, null);
+            }
+            
             
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(processed, type, baos);
@@ -301,7 +349,7 @@ public class PicModel {
     
     
     
-    public static BufferedImage doTints(BufferedImage img, float tint, float grey, boolean thumb){
+    public static BufferedImage doTints(BufferedImage img, float tint, float grey, boolean thumb, boolean profPic){
         
         int WIDTH = img.getWidth();
         int HEIGHT = img.getHeight();
@@ -338,7 +386,12 @@ public class PicModel {
             img = resize(img, Method.SPEED, 250, null, null);
             return pad(img, 1);
         }else{
-            return pad(img, 4);
+            if(profPic){
+                img = resize(img, 200, null);
+            return pad(img, 1);
+            }else{
+                return pad(img, 4);
+            }
         }
         
         
@@ -351,7 +404,10 @@ public class PicModel {
         //img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
         //return pad(img, 4);    
     //}
-   
+    
+    
+    
+    
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
         java.util.LinkedList<Pic> Pics = new java.util.LinkedList<>();
         Session session = cluster.connect("instagrAndrew");
@@ -486,19 +542,37 @@ public class PicModel {
             for (Row row : rs) {
                
                 String fullString = row.getString("hashtag");
+                
+                System.out.println(fullString);
+                
                 UUID uuid = row.getUUID("picId");
                 String us = row.getString("user");
                 
-                String[] tags = fullString.split(",");
+                String[] tags;
+                try{
+                    tags = fullString.split(",");
+                }catch(Exception ex){
+                    System.out.println("UH OH! WE'RE IN TROUBLE!");
+                    tags = null;        
+                }
+                               
                 
-                for(int i = 0; i < tags.length; i++){
-                    if (tags[i].toLowerCase().equals(searched.toLowerCase())){
-                        Pic toAdd = new Pic();
-                        toAdd.setUUID(uuid);
-                        toAdd.setUser(us);
-                        toAdd.setHashtag(fullString);
-                        picList.add(toAdd);
-                        break;
+                
+                if(tags!=null){
+                    for(int i = 0; i < tags.length; i++){
+                        
+                        System.out.print(tags[i].toLowerCase() + "-" + searched.toLowerCase() + "-");
+                        
+                        if (tags[i].toLowerCase().equals(searched.toLowerCase())){
+                            System.out.print("      MATCH!!!");
+                            Pic toAdd = new Pic();
+                            toAdd.setUUID(uuid);
+                            toAdd.setUser(us);
+                            toAdd.setHashtag(fullString);
+                            picList.add(toAdd);
+                            break;
+                        }
+                        System.out.println();
                     }
                 }
             }

@@ -51,26 +51,40 @@ public class Login extends HttpServlet {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
         
-        User us=new User();
-        us.setCluster(cluster);
-        boolean isValid=us.IsValidUser(username, password);
-        HttpSession session=request.getSession();
-        System.out.println("Session in servlet "+session);
-        if (isValid){
-            LoggedIn lg= new LoggedIn();
-            lg.setLoggedin();
-            lg.setUsername(username);
-            //request.setAttribute("LoggedIn", lg);
-            
-            session.setAttribute("LoggedIn", lg);
-            System.out.println("Session in servlet "+session);
-            RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
-	    rd.forward(request,response);
-            
-        }else{
-            response.sendRedirect("/InstagrAndrew/login.jsp");
-        }
+        System.out.println(username);
         
+        if(username != null){
+        
+            User us=new User();
+            us.setCluster(cluster);
+            boolean isValid=us.IsValidUser(username, password);
+            HttpSession session=request.getSession();
+            System.out.println("Session in servlet "+session);
+            if (isValid){
+                LoggedIn lg= new LoggedIn();
+                lg.setLoggedin();
+                lg.setUsername(username);
+                //request.setAttribute("LoggedIn", lg);
+
+                session.setAttribute("LoggedIn", lg);
+                System.out.println("Session in servlet "+session);
+                RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
+                rd.forward(request,response);
+
+            }else{
+                response.sendRedirect("../InstagrAndrew/login.jsp");
+            }
+        }else{
+            HttpSession session=request.getSession();
+            session.setAttribute("LoggedIn", null);
+            RequestDispatcher rd=request.getRequestDispatcher("login.jsp");
+            rd.forward(request,response);
+        }
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
     }
 
     /**

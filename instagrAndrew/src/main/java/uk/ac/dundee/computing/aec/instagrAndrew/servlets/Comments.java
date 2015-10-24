@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.CommentModel;
+import uk.ac.dundee.computing.aec.instagrAndrew.models.PicModel;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
 import uk.ac.dundee.computing.aec.instagrAndrew.stores.LoggedIn;
 
@@ -31,10 +33,12 @@ import uk.ac.dundee.computing.aec.instagrAndrew.stores.LoggedIn;
  *
  * @author Andrew
  */
-@WebServlet(name = "Comments", urlPatterns = {"/Comments"})
+@WebServlet(name = "Comments", urlPatterns = {"/Comments", "/Comments/*"})
 public class Comments extends HttpServlet {
 
     private Cluster cluster;
+    
+    CommentModel cm = new CommentModel();
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,15 +53,11 @@ public class Comments extends HttpServlet {
             throws ServletException, IOException {
                 
         String action = request.getParameter("whatToDo");
-        Boolean reload = false;
-        try{
-            reload = (Boolean)request.getAttribute("reload");
-        }catch(Exception e){}
+        cm.setCluster(cluster);
         
         System.out.println("ACTION: " + action);
-        System.out.println("RELOAD: " + reload);
         
-        if(action.equals("post") && reload == null){
+        if(action.equals("POST")){
             postComment(request, response);
         }else{
             getComments(request, response);
@@ -73,11 +73,6 @@ public class Comments extends HttpServlet {
             System.out.println(e.nextElement());
         }
         
-        
-        CommentModel cm = new CommentModel();
-        cm.setCluster(cluster);
-        
-        
         HttpSession session=request.getSession();
         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
 
@@ -92,7 +87,35 @@ public class Comments extends HttpServlet {
             UUID id = UUID.fromString(imageID);
             String content = request.getParameter("comment");
         
-            cm.insertComment(id, username, content);
+            
+            String whatToPost = request.getParameter("whatToDo");
+            String type = request.getParameter("type");
+            String imageThing = request.getParameter("imageThing");
+            
+            System.out.println("TYPE: " + type);
+            System.out.println("IMAGE THING: " + imageThing);
+            
+            
+            //here
+            
+            if(whatToPost.equals("POST")){
+                switch (type) {
+                    case "comment":
+                        cm.insertComment(id, username, content);
+                        break;
+                    case "like":
+                        cm.insertLike(username, id);
+                        break;
+                    default:
+                        cm.deleteLike(username, id);
+                        break;
+                }
+            }
+            
+            //
+            
+            
+            
             
            
             String hashtag = request.getParameter("hashtags");
@@ -108,13 +131,15 @@ public class Comments extends HttpServlet {
 
             String user = request.getParameter("username");
             request.setAttribute("username", user);
-
-            cm.setCluster(cluster);
+            
             UUID image;
             image = UUID.fromString(path);
             ArrayList<CommentModel> comments = cm.getComments(image);
             request.setAttribute("comments", comments);
-
+            
+            
+            ArrayList<String> likes = cm.getLikes(image);
+            request.setAttribute("likes", likes);
             
             
             Enumeration<String> things = request.getAttributeNames();
@@ -124,7 +149,6 @@ public class Comments extends HttpServlet {
                 System.out.println(things.nextElement());
             }
             
-            request.setAttribute("reload", true);
             RequestDispatcher rd=request.getRequestDispatcher("displayImage.jsp");
             rd.forward(request,response);
             //response.sendRedirect("displayImage.jsp");
@@ -171,16 +195,26 @@ public class Comments extends HttpServlet {
         String path = request.getParameter("imageSrc");
         request.setAttribute("imageSource", path);
         
+            
         
-        CommentModel cm = new CommentModel();
-        cm.setCluster(cluster);
         UUID image;
         image = UUID.fromString(path);
+        
+        
+        ArrayList<String> likes = cm.getLikes(image);
+        request.setAttribute("likes", likes);
+        
+        
         ArrayList<CommentModel> comments = cm.getComments(image);
         request.setAttribute("comments", comments);
         
-        RequestDispatcher rd=request.getRequestDispatcher("displayImage.jsp");
+        request.setAttribute("username", user);
+        
+        request.setAttribute("whatToDo", "Read");
+        
+        RequestDispatcher rd=request.getRequestDispatcher("/displayImage.jsp");
         rd.forward(request,response);
+                
     }
     
     
@@ -230,3 +264,4 @@ public class Comments extends HttpServlet {
     }// </editor-fold>
 
 }
+

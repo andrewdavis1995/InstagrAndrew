@@ -19,6 +19,7 @@ import javax.servlet.RequestDispatcher;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -72,6 +73,7 @@ public class Image extends HttpServlet {
 
     }
 
+    
     public void init(ServletConfig config) throws ServletException {
         // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster();
@@ -125,6 +127,8 @@ public class Image extends HttpServlet {
     }
     
     
+    
+    
     private void DisplayImage(int type,String Image, HttpServletResponse response) throws ServletException, IOException {
         
         PicModel tm = new PicModel();
@@ -147,6 +151,7 @@ public class Image extends HttpServlet {
         out.close();
     }
 
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         System.out.println("MADE IT TO DOPOST");
@@ -184,6 +189,8 @@ public class Image extends HttpServlet {
                     String tint;
                     String grey;
                     String contrast;
+                    String rotate;
+                    String flip;
                     
                     if(!profpic){
 
@@ -193,13 +200,19 @@ public class Image extends HttpServlet {
                         grey = (String)request.getParameter("Greyscale");
                         tm.setGrey(grey);
 
-                        //String vig = (String)request.getParameter("Vignette");
-                        //tm.setVignette(vig);
-
                         contrast = (String)request.getParameter("Contrast");
                         tm.setContrast(contrast);
-                        
 
+                        rotate = (String)request.getParameter("Rotation");
+                        tm.setRotate(rotate);
+                        
+                        flip = (String)request.getParameter("Flip");
+                        tm.setFlip(flip);
+                        
+                        System.out.println("ROTATE: " + rotate);
+                        System.out.println("FLIP: " + flip);
+                        
+                        
                         String h1 = (String)request.getParameter("hiddenHT1");
                         String h2 = (String)request.getParameter("hiddenHT2");
                         String h3 = (String)request.getParameter("hiddenHT3");
@@ -225,6 +238,8 @@ public class Image extends HttpServlet {
                         tm.setContrast("3");
                         tm.setGrey("No");
                         tm.setTint("None");
+                        tm.setRotate("None");
+                        tm.setFlip("None");
                     }
                     
                     
@@ -235,7 +250,10 @@ public class Image extends HttpServlet {
                 }
                 
                 if(profpic){
-                    response.sendRedirect("/InstagrAndrew/profile/" + username);
+                    request.setAttribute("username", username);
+                    System.out.println("SENT TO PROFILE");
+                    RequestDispatcher rd = request.getRequestDispatcher("Profile/" + username);
+                    rd.forward(request, response);
                 }else{
                     RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
                     rd.forward(request, response);
@@ -246,8 +264,7 @@ public class Image extends HttpServlet {
         }
 
     }
-
-    
+        
     private void error(String mess, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter out = null;

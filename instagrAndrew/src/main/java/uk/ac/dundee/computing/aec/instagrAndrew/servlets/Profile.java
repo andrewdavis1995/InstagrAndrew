@@ -55,6 +55,11 @@ public class Profile extends HttpServlet {
         String username = request.getParameter("username");
         System.out.println("USERNAME: " + username);
         
+        if(username == null){
+            username = (String)request.getAttribute("username");
+        }
+        
+        System.out.println("USERNAME: " + username);
         
         User us = new User();
         us.setCluster(cluster);

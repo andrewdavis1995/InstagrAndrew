@@ -15,6 +15,13 @@
         <title>InstagrAndrew</title>
         <link rel="stylesheet" type="text/css" href="/InstagrAndrew/myStyles.css" />
 
+
+        <% String type;
+            String search = "";
+            String name;
+            String emailString;
+        %>
+    
         <script>
 
             function showSaveButton() {
@@ -28,18 +35,21 @@
             function hideChangeButton() {
                 document.getElementById("changeImageBtn").style.display = 'none';
             }
+            
+            function getHashtagName(link, imageName){
+                var thing = link.innerHTML;
+                var cut = thing.substring(1);
+                document.getElementById("searchText").value = cut;
+                var path = "HTSearchForm" + imageName;
+                
+                document.getElementById(path).submit();
+            }
 
         </script>
 
     </head>
 
-    <% String type;
-        String search;
-        String name;
-        String emailString;
-    %>
-
-    <body background="developmentImages/cork.jpg" style="margin-top: 175px;">
+    <body background="/InstagrAndrew/developmentImages/cork.jpg" style="margin-top: 175px;">
       
         <%
             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
@@ -57,7 +67,7 @@
                     if (lg != null) {
                         String currentUser = lg.getUsername(); 
                         if(currentUser.equals(search)){%>
-                            <form style="display: inline-block; margin-left: 60px" action="UpdateProfile" name="updateDetails" id="updateDetails" method="type">
+                            <form style="display: inline-block; margin-left: 60px" action="/InstagrAndrew/UpdateProfile" name="updateDetails" id="updateDetails" method="type">
                                 <input type="hidden" name="username" value="<%=currentUser%>">
                                 <input type="hidden" name="whatToDo" value="load">
                                 <a href="#" onclick="document.getElementById('updateDetails').submit();">Update Details</a>
@@ -78,7 +88,7 @@
                     if (lg != null) {
                         String currentUser = lg.getUsername();
                         if (request.getAttribute("ProfilePic") == null) { %>
-                            <img id="ProfPic" src = "developmentImages/question.png" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
+                            <img id="ProfPic" src = "/InstagrAndrew/developmentImages/question.png" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
                              <%
                         } else { %>
                             <img id="ProfPic" src = "/InstagrAndrew/Image/<%= request.getAttribute("ProfilePic")%>" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
@@ -92,8 +102,7 @@
                         <p id="imageCount" style="color: white; position: absolute; top: 30px; display: inline-block; left: 120px; margin-left: 20px;"> 0 IMAGES</p>
                         <p id="emailAddress" style="color: white; position: absolute; top: 45px; display: inline-block; left: 120px; margin-left: 20px;"> THINGS </p>
 
-                        <form style ="float: right; color: white; width: 100%;" method="POST" enctype="multipart/form-data" action="../Image">
-
+                        <form style ="float: right; color: white; width: 100%;" method="POST" enctype="multipart/form-data" action="/InstagrAndrew/Image">
                             
                             <%
                         
@@ -104,7 +113,7 @@
                                 <div onmouseover="showChangeButton()" onmouseout="hideChangeButton()" class="image-upload" >
 
                                     <label for="files">
-                                        <img id="changeImageBtn" style="position: absolute; float: left; top: 72px; left: 0; display: none" src="developmentImages/change.png"/>
+                                        <img id="changeImageBtn" style="position: absolute; float: left; top: 72px; left: 0; display: none" src="/InstagrAndrew/developmentImages/change.png"/>
                                     </label>
 
                                     <input id="files" type="file" name="upfile"/>
@@ -138,17 +147,18 @@
                                         reader.readAsDataURL(f);
                                     }
                                 } else {
-                                    document.images["ProfPic"].src = "developmentImages/question.png";
+                                    document.images["ProfPic"].src = "InstagrAndrew/developmentImages/question.png";
                                 }
                                 document.getElementById('files').addEventListener('change', getImage, false);
                             </script>
 
+                            <input type="hidden" value="<%=search%>" name="username">
                             <input type="submit" value="Submit" name="saveButton" id="saveButton" style="float: right; display: none">
                         </form>
 
                 <%
                     } else {
-                        String redirectURL = "login.jsp";
+                        String redirectURL = "InstagrAndrew/login.jsp";
                         response.sendRedirect(redirectURL);
                     }
                 %>
@@ -183,15 +193,19 @@
                 count++;
                 Pic p = (Pic) iterator.next();
         %>
-        <div position="relative" style = "background-image: url('developmentImages/pinBG.png'); display: inline-block; width: 350px; height: 400px; margin-bottom: 50px; margin-left: 20px"> 
+        <div position="relative" style = "background-image: url('/InstagrAndrew/developmentImages/pinBG.png'); display: inline-block; width: 350px; height: 400px; margin-bottom: 50px; margin-left: 20px"> 
             <%
                 String hts = p.getHashtag();
                 String[] splitHT = new String[3];
                 if (hts != null) {
                     splitHT = hts.split(",");
-                    for (int i = 0; i < splitHT.length; i++) {
-                                    try {%> 
-            <li><a style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%" href="SearchHashtag?searchText=<%=splitHT[i]%>">#<%= splitHT[i]%> </a></li> 
+                    for (int i = 0; i < 3; i++) {
+                        try {%> 
+                        <form style="margin-top: 15px;" method="POST" action="../SearchHashtag" id="HTSearchForm<%=p.getSUUID()%>">   
+                            <a href="#" onclick="getHashtagName(this, '<%=p.getSUUID()%>');" style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%">#<%=splitHT[i]%></a>
+                            <input type="hidden" name="searchText" id="searchText" value="">
+                        </form>
+                         
                 <%
                         } catch (Exception e) {
                         }
@@ -217,14 +231,14 @@
 
                 %>
 
-            <form method="POST" action="Comments">
+            <form method="POST" action="/InstagrAndrew/Comments">
                 <input type="hidden" name="imageSrc" id="imageSrc" value ="<%= p.getSUUID()%>">
                 <input type="hidden" name="whatToDo" id="whatToDo" value ="read">
-                <input type="hidden" name="username" id="username" value ="<%=name%>">
+                <input type="hidden" name="username" id="username" value ="<%=search%>">
                 <input type="hidden" name="hashtags" id="hashtags" value="<%=hashtagOutput%> ">
                 <input type="hidden" name="profPic" id="profPic" value ="<%=request.getAttribute("ProfilePic")%>">
                 <a style ="display: block; margin-left: 48px; margin-top: 15px; float: left" >
-                    <input type="image" name="Submit" src="/InstagrAndrew/Thumb/<%=p.getSUUID()%>"></a>
+                <input type="image" name="Submit" src="/InstagrAndrew/Thumb/<%=p.getSUUID()%>"></a>
                 <!--<input type="submit" name="Submit" value="SUBMIT">-->
             </form>
         </div>

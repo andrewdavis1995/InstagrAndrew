@@ -43,7 +43,7 @@
         %>
                     <div>
                         
-                        <form method="POST" action="Profile"> 
+                        <form method="POST" action="Profile/<%=username%>"> 
                             <%if(profiles.get(i).getProfilePic() != null){ %>
                                 <input type="image" style="left: 40px; width:70px; height: 70px; position: absolute;" src="/InstagrAndrew/Image/<%=profiles.get(i).getProfilePic()%>" value="" alt="">
                             <% }else{ %>

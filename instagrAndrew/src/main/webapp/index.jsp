@@ -15,6 +15,12 @@
         <link rel="stylesheet" type="text/css" href="myStyles.css" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
+    
+    <script>
+        function submitLoginForm(){
+             document.getElementById('loginForm').submit();
+        }
+    </script>
    
     
     <body background="developmentImages/4.JPG">
@@ -34,7 +40,7 @@
                         %>
 
                 <div style="position: absolute; left: calc(100% - 200px); width: 200px; height: 85px; float: right; margin-top: 0; top: 0;"> 
-                    <form action="Profile" method="POST">
+                    <form action="Profile/<%=UserName%>" method="POST">
                         <input type="Image" name="Submit" src="developmentImages/yourProfile.png" style="width:220px; height: 65px; float: right; margin-top: 0; top: 0">
                         <input type="hidden" name = "username" id="username" value="<%=UserName%>">
                     </form>
@@ -49,7 +55,10 @@
                                         }else{
                                             %>
                             <li><a href="register.jsp">Register</a></li>
-                            <li><a href="login.jsp">Login</a></li>
+                            
+                            <form style="display: inline-block" action="Login" method="POST" name="loginForm" id="loginForm">
+                                <li><a onclick="submitLoginForm();" href="#">Login</a></li>
+                            </form>
                             <%
 
                     }
