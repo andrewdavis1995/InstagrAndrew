@@ -165,9 +165,6 @@ public class PicModel {
     public void insertPic(byte[] b, String type, String name, String user, String h, boolean profilePic) {
              
         
-        System.out.println("MADE IT HERE!");
-        System.out.println(user + "----> " + profilePic);
-        
         try {
             Convertors convertor = new Convertors();
 
@@ -203,7 +200,6 @@ public class PicModel {
                 PreparedStatement psInsertProfPicToUser = session.prepare("update userprofiles set profilepic = ? where login = ?");
                 BoundStatement bsInsertProfPicToUser = new BoundStatement(psInsertProfPicToUser);
                 session.execute(bsInsertProfPicToUser.bind(picid, user));
-                System.out.println("Done HERE");
             }
             session.close();
             
@@ -292,60 +288,7 @@ public class PicModel {
     }
     
     
-    /*public BufferedImage addVignette (BufferedImage image){
-        
-        System.out.println("IT'S HERE");
-        
-        //load source images
-        try{
-            File img = new File("developmentImages/cover.png");
-            String fullPath = img.getAbsolutePath();
-            System.out.println("FILE PATH: " + fullPath);
-            
-            //BufferedImage overlay = ImageIO.read(img);
-                        
-            int w = image.getWidth();
-            int h = image.getHeight();
-            
-            // create the new image, canvas size is the max. of both image sizes
-            BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        
-            Image tmp = cover.getScaledInstance(w, h, BufferedImage.SCALE_FAST);
-            BufferedImage buffered = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-            buffered.getGraphics().drawImage(tmp, 0, 0, null);
-           
-            
-            System.out.println("NOW");
-            
-            Graphics g = combined.getGraphics();
-            
-            g.drawImage(image, 0, 0, null);
-            g.drawImage(tmp, 0, 0, null);
-            
-            
-            System.out.println("THIS BIT");
-            
-            // Save as new image
-            ImageIO.write(combined, "PNG", new File("/tmpFolder/tmp___Image1234.png"));
-            
-            File returned = new File("/tmpFolder/tmp___Image1234.png");
-            BufferedImage output = ImageIO.read(returned);
-            
-            
-            System.out.println("END");
-            
-            
-            try{
-                returned.delete();
-            }catch(Exception e){}
-                
-            return output;
-        }catch(Exception e){
-            System.out.println("ERROR: " + e.getMessage());
-        }
-                               
-        return image;
-    }*/
+    
     
     
     
@@ -543,7 +486,6 @@ public class PicModel {
                
                 String fullString = row.getString("hashtag");
                 
-                System.out.println(fullString);
                 
                 UUID uuid = row.getUUID("picId");
                 String us = row.getString("user");
@@ -552,7 +494,6 @@ public class PicModel {
                 try{
                     tags = fullString.split(",");
                 }catch(Exception ex){
-                    System.out.println("UH OH! WE'RE IN TROUBLE!");
                     tags = null;        
                 }
                                

@@ -16,8 +16,8 @@
         <link rel="stylesheet" type="text/css" href="myStyles.css" />
         <script>
             function showSubmitButton(){
-                document.getElementById("submitButton").style.display = 'block';
-                document.getElementById("submitLabel").style.display = 'block';
+                document.getElementById("submitButton").style.display = 'inline-block';
+                document.getElementById("submitLabel").style.display = 'inline-block';
             }
             function hideSubmitButton(){
                 document.getElementById("submitButton").style.display = 'none';
@@ -26,7 +26,7 @@
         </script>
                 
     </head>
-    <body background="developmentImages/pegs.png" style = "background-color: red; background-size: cover;">
+    <body background="developmentImages/pegs.png" style = "background-color: red; background-size: cover; margin-bottom: 30px">
         <nav>
             <ul>
                 <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
@@ -92,11 +92,17 @@
                     document.getElementById('files').addEventListener('change', getImage, false);
                 </script>
             
+            <p style="display: inline; margin-left: 15px">Hashtags:</p>
+            <p name="HT1" id = "HT1" style="display: none; background-color: white; color: red;" onclick="removeHashtag(1);">#</p>
+            <p name="HT2" id = "HT2" style="display: none; background-color: white; color: red;" onclick="removeHashtag(2);">#</p>
+            <p name="HT3" id = "HT3" style="display: none; background-color: white; color: red;" onclick="removeHashtag(3);">#</p>
+            
         </div>
             
-            <div style="float: right; margin-right: 2%; margin-top: 9%; width: 50%; display: inline-block;">
+        <div style="float: right; margin-right: 2%; margin-top: 3%; width: 50%; display: inline-block;">
             
-                <h2 style="color:white;">FILTERS</h2>
+            <h2 style="color:white; width: 100%; text-align: center">FILTERS</h2>
+            <h4 style="color:white; width: 100%; text-align: center">"Let's see what Develops"</h4>
                 
             <div style="display: inline-block; margin-right: 5%;">
                 <h3>Tint Color:</h3>
@@ -142,21 +148,18 @@
                 <input type="radio" value="6" name="Contrast">+45%<br><br>
             </div>
             
-            <br><br>
+            <br>
             <p>Hashtags (cannot be longer than 15 characters - max of 3 hashtags):</p>
             <p>(Separate By commas, Click to remove)</p>
             <input maxlength="20" name="Hashtag" type="text" id="ht" onkeydown="doHashtag(event);" onkeyup="if(event.keyCode == 188){ document.getElementById('ht').value = ''; }" maxlength="15" >
             
-            <p name="HT1" id = "HT1" style="display: none; background-color: indianred;" onclick="removeHashtag(1);">#</p>
             <input type="hidden" name="hiddenHT1" id="hiddenHT1" value=""/>
-            <p name="HT2" id = "HT2" style="display: none; background-color: indianred;" onclick="removeHashtag(2);">#</p>
             <input type="hidden" name="hiddenHT2" id="hiddenHT2" value=""/>
-            <p name="HT3" id = "HT3" style="display: none; background-color: indianred;" onclick="removeHashtag(3);">#</p>
             <input type="hidden" name="hiddenHT3" id="hiddenHT3" value=""/>
             
             
-            <br><br><br>
-            <h4 id="submitLabel" style="display: none">Click to Upload</h4>
+            <br><br>
+            <h5 id="submitLabel" style="display: none">Click to Upload:</h5>
             
             <input type="submit" value="Submit" id="submitButton" style="display: none; width: 300px; height: 60px">
             

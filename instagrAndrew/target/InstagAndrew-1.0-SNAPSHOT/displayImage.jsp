@@ -27,7 +27,6 @@
         function calcImage(){
             var img = document.getElementById("likeStar").src.toString();
             var path = img.substring(54);
-            alert(path);
             
             if(path == "star_blank.png"){
                 document.getElementById("type").value = "like";
@@ -38,29 +37,23 @@
         }
         
         
-        function getProfileName(link, name){
-            var thing = link.innerHTML;
-            alert(thing + "-");
-            var susse = "username" + thing;
-            alert(susse);
-            document.getElementById(susse).value = thing;
-            var path = "UserSearchForm" + thing + name;
+        function getProfileName(content, name){
             
-            alert(path + "-");
-
+            var con = content.innerHTML;
+            
+            var formElement = "username";
+            document.getElementById(formElement).value = con;
+            var path = "UserSearchForm" + con + name;
+            
             document.getElementById(path).submit();
         }
         
         
         function getProfileNameLikes(link){
-            var thing = link.innerHTML;
-            alert(thing + "-");
-            var susse = "username" + thing;
-            alert(susse);
-            document.getElementById(susse).value = thing;
-            var path = "LikeForm" + thing;
-            
-            alert(path + "-");
+            var profile = link.innerHTML;
+            var formElement = "username" + profile;
+            document.getElementById(formElement).value = profile;
+            var path = "LikeForm" + profile;
 
             document.getElementById(path).submit();
         }
@@ -75,7 +68,6 @@
             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
             String currentUser = lg.getUsername();
             
-            System.out.println("CURRENT USER: " + currentUser);
             
             String path = (String)request.getAttribute("imageSource");
             ArrayList<String> likes;
@@ -86,14 +78,9 @@
                 System.out.println("SUCCESS");
                 numLikes = likes.size();
             }catch(Exception ex){
-                System.out.println("CAUGHT");
                 likes = new ArrayList<String>();
                 numLikes = 0;
             }
-            
-            
-            
-            System.out.println("LIKES: " + likes);
             
             String output = "";
             
@@ -140,7 +127,7 @@
                             <div id="<%=likes.get(i)%>">
                                 
                                 <form style="margin-top: 15px;" method="POST" action="Profile" id="LikeForm<%=likes.get(i)%>">
-                                    <a href="#" onclick="getProfileNameLikes(this);" style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%"><%=likes.get(i)%></a>
+                                    <a href="#" onclick="getProfileNameLikes(this);" style="margin-top: 10px; color: white; float: left; margin-left: 5px; width: 100%"><%=likes.get(i)%></a>
                                     <input type="hidden" name="username" id="username<%=likes.get(i)%>" value="">
                                 </form>
                                 
@@ -152,6 +139,13 @@
                 
             </div>
         
+                <%
+                    Object profilePicture = request.getAttribute("ProfPic");
+                    if(profilePicture == null){
+                        request.setAttribute("ProfPic", null);
+                    }
+                %>
+                
             <div style="display: inline-block; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; margin-left: 0; width: 100%; vertical-align: top; height: 120px;">
                 <img style="width:60px; height:60px; display: inline-block;" src = "/InstagrAndrew/Image/<%= request.getAttribute("ProfPic") %>">
                 <div style="margin-left: 15px; margin-top: 0; height: 100%; vertical-align: top; display: inline-block; width: calc(100%-105px); width: -webkit-calc(100% - 105px); width: -moz-calc(100% - 105px);">
@@ -177,9 +171,9 @@
                     %>
                     <div style="background-image: url('/InstagrAndrew/developmentImages/otherBlue.png'); background-size: cover; height: 70px; margin-top: 0; margin-top: 10px;">
                         
-                        <form style="margin-top: 15px;" method="POST" action="Profile" id="UserSearchForm<%=comments.get(i).getUsername()%><%=comments.get(i).getContent()%>">   
-                            <a href="#" onclick="getProfileName(this, '<%=comments.get(i).getContent()%>');" style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%"><%=comments.get(i).getUsername()%></a>
-                            <input type="hidden" name="username" id="username<%=comments.get(i).getUsername()%>" value="">
+                        <form style="margin-top: 15px;" method="POST" action="Profile" id="UserSearch<%=comments.get(i).getUsername()%>">   
+                            <a onclick ="document.getElementById('UserSearch<%=comments.get(i).getUsername()%>').submit();" href="#" style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%"><%=comments.get(i).getUsername()%></a>
+                            <input type="hidden" name="username" id="username" value="<%=comments.get(i).getUsername()%>">
                         </form>
                             
                              

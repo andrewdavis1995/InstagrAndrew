@@ -56,8 +56,6 @@ public class LogOut extends HttpServlet {
         RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
         rd.forward(request,response);
         
-        //"SEE WHAT DEVELOPS"
-        
     }
 
     /**

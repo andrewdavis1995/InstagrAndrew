@@ -40,8 +40,6 @@ public class SearchHashtag extends HttpServlet {
             throws ServletException, IOException {        
         
             String name = request.getParameter("searchText");
-
-            System.out.println("Name: " + name);
             
             if(name != null){
                 PicModel pm=new PicModel();
@@ -49,8 +47,6 @@ public class SearchHashtag extends HttpServlet {
 
                 java.util.LinkedList<Pic> matches = pm.getMatchingPics(name);
                 
-                System.out.println("LENGTH OF MATCHES: " + matches.size());
-
                 request.setAttribute("matches", matches);
                 request.setAttribute("searchedText", name);
 

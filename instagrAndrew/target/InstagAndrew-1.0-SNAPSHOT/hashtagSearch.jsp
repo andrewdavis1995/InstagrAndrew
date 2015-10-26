@@ -4,6 +4,8 @@
             Author     : Andrew
         --%>
 
+        
+        
         <%@page import="java.util.Iterator"%>
         <%@page import="java.util.ArrayList"%>
         <%@page import="java.util.ArrayList"%>
@@ -15,6 +17,21 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                 <link rel="stylesheet" type="text/css" href="myStyles.css" />
                 <title>Search Results</title>
+                
+                
+                <script>
+                    function goToProfile(content){
+            
+                    var con = content.innerHTML;
+                    var formElement = "username";
+                    document.getElementById(formElement).value = con;
+                    var path = "myform" + con;
+
+                    document.getElementById(path).submit();
+                }
+                </script>
+                
+                
             </head>
             <body>
                 <nav>
@@ -54,11 +71,11 @@
                             }
 
                     %>
-                            <div  position="relative" style = "background-image: url('developmentImages/pinBG.png'); display: inline-block; width: 350px; height: 400px; margin-bottom: 50px; margin-left: 20px"> 
+                            <div  position="relative" style = "background-image: url('developmentImages/poleroid.png'); display: inline-block; width: 350px; height: 350px; margin-bottom: 50px; margin-left: 20px"> 
                                 
-                                <form method="POST" action="Profile/<%=p.getUser()%>" name="myform" id="myform">
-                                    <input type="hidden" value="<%=p.getUser()%>" name="username">
-                                    <a style="margin-top: 30px; color: #39335B; float: left; margin-left: 48px; width: 100%" href="#" onclick="document.getElementById('myform').submit();"><%=p.getUser()%></a>
+                                <form method="POST" action="Profile/<%=p.getUser()%>" name="myform" id="myform<%=p.getUser()%>">
+                                    <input type="hidden" value="<%=p.getUser()%>" name="username" id="username">
+                                    <a style="margin-top: 30px; color: #39335B; float: left; margin-left: 48px; width: 100%" href="#" onclick="goToProfile(this)"><%=p.getUser()%></a>
                                 </form>
                              
                                 <form method="POST" action="Comments">

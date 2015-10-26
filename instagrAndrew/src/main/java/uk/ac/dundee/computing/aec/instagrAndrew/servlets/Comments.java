@@ -55,7 +55,6 @@ public class Comments extends HttpServlet {
         String action = request.getParameter("whatToDo");
         cm.setCluster(cluster);
         
-        System.out.println("ACTION: " + action);
         
         if(action.equals("POST")){
             postComment(request, response);
@@ -81,7 +80,6 @@ public class Comments extends HttpServlet {
         if (lg != null) {
             
             String imageID = request.getParameter("imageSrc");
-            System.out.println("IMAGE ID: " + imageID);
             username = lg.getUsername();   
         
             UUID id = UUID.fromString(imageID);
@@ -90,13 +88,7 @@ public class Comments extends HttpServlet {
             
             String whatToPost = request.getParameter("whatToDo");
             String type = request.getParameter("type");
-            String imageThing = request.getParameter("imageThing");
             
-            System.out.println("TYPE: " + type);
-            System.out.println("IMAGE THING: " + imageThing);
-            
-            
-            //here
             
             if(whatToPost.equals("POST")){
                 switch (type) {
@@ -110,25 +102,29 @@ public class Comments extends HttpServlet {
                         cm.deleteLike(username, id);
                         break;
                 }
-            }
+            }            
             
-            //
-            
-            
-            
-            
-           
+                       
             String hashtag = request.getParameter("hashtags");
             request.setAttribute("hashtags", hashtag);
 
-            String PP = request.getParameter("profPic");
-            if(PP!= null){
-                UUID profpic = UUID.fromString(PP);
+            
+            Object PP = request.getParameter("profPic");
+            try{
+                String pp = PP.toString();
+                UUID profpic = UUID.fromString(pp);
                 request.setAttribute("ProfPic", profpic);
+            }catch(Exception except){
+                request.setAttribute("ProfPic", null);
             }
+            
+            System.out.println("THERE");
+            
             String path = request.getParameter("imageSrc");
             request.setAttribute("imageSource", path);
 
+            System.out.println("THERE");
+            
             String user = request.getParameter("username");
             request.setAttribute("username", user);
             
@@ -137,17 +133,12 @@ public class Comments extends HttpServlet {
             ArrayList<CommentModel> comments = cm.getComments(image);
             request.setAttribute("comments", comments);
             
+            System.out.println("THERE");
             
             ArrayList<String> likes = cm.getLikes(image);
             request.setAttribute("likes", likes);
             
-            
-            Enumeration<String> things = request.getAttributeNames();
-            System.out.println("SECOND RUN");
-            
-            while(things.hasMoreElements()){
-                System.out.println(things.nextElement());
-            }
+            System.out.println("HERE");
             
             RequestDispatcher rd=request.getRequestDispatcher("displayImage.jsp");
             rd.forward(request,response);
@@ -167,12 +158,6 @@ public class Comments extends HttpServlet {
     protected void getComments(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        
-        Enumeration<String> e = request.getParameterNames();
-        
-        while(e.hasMoreElements()){
-            System.out.println(e.nextElement());
-        }
         
         String user = request.getParameter("username");
         request.setAttribute("username", user);
@@ -245,8 +230,6 @@ public class Comments extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getParameter("imageSrc");
-        System.out.println(path);
-        System.out.println("THIS IS RUNNING!");
         processRequest(request, response);
         
         

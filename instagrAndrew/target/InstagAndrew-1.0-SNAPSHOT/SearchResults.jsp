@@ -41,7 +41,7 @@
                         currentUser = lg.getUsername();
                     }
         %>
-                    <div>
+                    <div style="background-image: url('developmentImages/userprofileBG.png');">
                         
                         <form method="POST" action="Profile/<%=username%>"> 
                             <%if(profiles.get(i).getProfilePic() != null){ %>

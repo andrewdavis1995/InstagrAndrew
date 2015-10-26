@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.Validation;
@@ -54,15 +55,22 @@ public class Register extends HttpServlet {
         String password=request.getParameter("password");
         String confPass=request.getParameter("confirmPassword");
         
-        User us=new User();
-        us.setCluster(cluster);
-        Validation isValid = us.checkDetails(fName, surname, email, username, password, confPass, false);
-        
-        if(isValid.getValidity()){
-            us.RegisterUser(fName, surname, email, username, password);
-            response.sendRedirect("/InstagrAndrew");
+        if(username != null){
+            User us=new User();
+            us.setCluster(cluster);
+            Validation isValid = us.checkDetails(fName, surname, email, username, password, confPass, false);
+
+            if(isValid.getValidity()){
+                us.RegisterUser(fName, surname, email, username, password);
+                response.sendRedirect("/InstagrAndrew");
+            }else{
+                response.sendRedirect("/InstagrAndrew/register.jsp");
+            }
         }else{
-            response.sendRedirect("/InstagrAndrew/register.jsp");
+            HttpSession session=request.getSession();
+            session.setAttribute("LoggedIn", null);
+            RequestDispatcher rd=request.getRequestDispatcher("register.jsp");
+            rd.forward(request,response);
         }
         
     }

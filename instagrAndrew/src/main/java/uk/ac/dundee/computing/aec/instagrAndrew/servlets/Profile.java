@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.PicModel;
 import uk.ac.dundee.computing.aec.instagrAndrew.models.User;
@@ -51,16 +52,21 @@ public class Profile extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        
-        
         String username = request.getParameter("username");
-        System.out.println("USERNAME: " + username);
         
         if(username == null){
-            username = (String)request.getAttribute("username");
+            try{
+                username = (String)request.getAttribute("username");
+            }catch(Exception aa){
+                RequestDispatcher rd = request.getRequestDispatcher("/404.jsp");
+                rd.forward(request, response);
+            }
         }
         
-        System.out.println("USERNAME: " + username);
         
+        System.out.println("User: " + username);
+        
+                
         User us = new User();
         us.setCluster(cluster);
         UserDetails userDetails = us.getProfileInfo(username, false);
@@ -70,7 +76,6 @@ public class Profile extends HttpServlet {
         String user = userDetails.getUsername();
         Set<String> email = userDetails.getEmail();
         
-        System.out.println(name + "---" + profPic +  "---" + user +  "---" + email);
         
         
         request.setAttribute("EmailAddress", email);
@@ -103,7 +108,6 @@ public class Profile extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String user = request.getParameter("username");
-        System.out.println("USER IN DO GET: " + user);
         processRequest(request, response);
     }
 
@@ -119,7 +123,6 @@ public class Profile extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String user = request.getParameter("username");
-        System.out.println("USER IN DO POST: " + user);
         processRequest(request, response);
     }
 

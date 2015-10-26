@@ -154,8 +154,6 @@ public class Image extends HttpServlet {
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        System.out.println("MADE IT TO DOPOST");
-        
         for (Part part : request.getParts()) {
             
             String type = part.getContentType();
@@ -163,11 +161,10 @@ public class Image extends HttpServlet {
                 
                 String filename = part.getSubmittedFileName();
 
-                String thing = request.getParameter("profilePic");
-                System.out.println("PROFILE PIC is: " + thing);
+                String profilePic = request.getParameter("profilePic");
                 
                 boolean profpic;
-                profpic = thing != null;
+                profpic = profilePic != null;
                          
                 InputStream is = request.getPart(part.getName()).getInputStream();
                 int i = is.available();
@@ -208,10 +205,7 @@ public class Image extends HttpServlet {
                         
                         flip = (String)request.getParameter("Flip");
                         tm.setFlip(flip);
-                        
-                        System.out.println("ROTATE: " + rotate);
-                        System.out.println("FLIP: " + flip);
-                        
+                                                
                         
                         String h1 = (String)request.getParameter("hiddenHT1");
                         String h2 = (String)request.getParameter("hiddenHT2");
@@ -251,7 +245,6 @@ public class Image extends HttpServlet {
                 
                 if(profpic){
                     request.setAttribute("username", username);
-                    System.out.println("SENT TO PROFILE");
                     RequestDispatcher rd = request.getRequestDispatcher("Profile/" + username);
                     rd.forward(request, response);
                 }else{

@@ -94,10 +94,13 @@ public class CommentModel {
        
         BoundStatement boundStatement = new BoundStatement(ps);
         
-        session.execute( // this is where the query is executed
-                boundStatement.bind( // here you are binding the 'boundStatement'
+        try{
+            session.execute( 
+                boundStatement.bind(
                         imageID, username, content, time));
-        //We are assuming this always works.  Also a transaction would be good here !
+        }catch(Exception exc){
+            return false;
+        }
         
         return true;
     }
@@ -126,8 +129,6 @@ public class CommentModel {
                 likers.add(name);
             }
         }
-        
-        System.out.println("LIKERS: " + likers);
         
         return likers;
     }

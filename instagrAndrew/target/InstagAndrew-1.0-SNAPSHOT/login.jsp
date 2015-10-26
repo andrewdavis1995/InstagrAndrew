@@ -30,7 +30,7 @@
                     <br><li style="margin-left: 15px; padding-bottom: 15px;">User Name <input autocomplete="off" type="text" name="username"></li><br><br>
                     <li style="margin-left: 26px; padding-top: 15px;">Password <input autocomplete="off" type="password" name="password"></li>
                 </ul>
-                <br/><input type="image" style="margin-left: 50px; margin-bottom: 15px; width: 260px; height: 40px; background: none; margin-top: 30px;" src="developmentImages/login button.png" onMouseOver="this.src='developmentImages/login button(hover).png'" onMouseOut="this.src='developmentImages/login button.png'"> 
+                <br/><input type="image" style="margin-left: 50px; margin-bottom: 15px; width: 260px; height: 40px; background: none; margin-top: 0px;" src="developmentImages/login button.png" onMouseOver="this.src='developmentImages/login button(hover).png'" onMouseOut="this.src='developmentImages/login button.png'"> 
                
             </form>
         </div>

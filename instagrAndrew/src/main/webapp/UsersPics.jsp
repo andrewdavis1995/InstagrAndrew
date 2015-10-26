@@ -25,7 +25,7 @@
         <script>
 
             function showSaveButton() {
-                document.getElementById("saveButton").style.display = 'block';
+                document.getElementById("saveButton").style.display = 'inline-block';
             }
 
             function showChangeButton() {
@@ -37,15 +37,15 @@
             }
             
             function getHashtagName(link, imageName){
-                var thing = link.innerHTML;
-                var cut = thing.substring(1);
-                document.getElementById("searchText").value = cut;
+                var hashtag = link.innerHTML;
+                var cut = hashtag.substring(1);
+                document.getElementById("searchText" + imageName).value = cut;
                 var path = "HTSearchForm" + imageName;
                 
                 document.getElementById(path).submit();
             }
 
-        </script>
+        </script>`
 
     </head>
 
@@ -73,6 +73,9 @@
                                 <a href="#" onclick="document.getElementById('updateDetails').submit();">Update Details</a>
                             </form>
                                 
+                            <form action="LogOut" method="POST" style = "display: inline-block; float: right; margin-right: 20px;">
+                                <input type="submit" value="Log Out" style="margin-left: 30px; margin-bottom: 15px; width: 150px;"> 
+                            </form>
                 <%      }
                     }
                 %>
@@ -100,15 +103,11 @@
                         <h2 id="fullName" style="color: white; position: absolute; top: 0px; display: inline-block; left: 120px; margin-left: 20px; margin-top: 0;"> NAME </h2>
                         <p id="profileName" style="color: white; position: absolute; top: 15px; display: inline-block; left: 120px; margin-left: 20px;"> Your Profile </p>
                         <p id="imageCount" style="color: white; position: absolute; top: 30px; display: inline-block; left: 120px; margin-left: 20px;"> 0 IMAGES</p>
-                        <p id="emailAddress" style="color: white; position: absolute; top: 45px; display: inline-block; left: 120px; margin-left: 20px;"> THINGS </p>
+                        <p id="emailAddress" style="color: white; position: absolute; top: 45px; display: inline-block; left: 120px; margin-left: 20px;"> none </p>
 
                         <form style ="float: right; color: white; width: 100%;" method="POST" enctype="multipart/form-data" action="/InstagrAndrew/Image">
                             
                             <%
-                        
-                            System.out.println("SEARCH: " + search);
-                            System.out.println("CURRENT USER: " + currentUser);
-                        
                             if(currentUser.equals(search)){%>
                                 <div onmouseover="showChangeButton()" onmouseout="hideChangeButton()" class="image-upload" >
 
@@ -153,7 +152,7 @@
                             </script>
 
                             <input type="hidden" value="<%=search%>" name="username">
-                            <input type="submit" value="Submit" name="saveButton" id="saveButton" style="float: right; display: none">
+                            <input type="submit" value="Save Changes" name="saveButton" id="saveButton" style="float: right; margin-right: 40px; display: none; width: 200px; height: 45px">
                         </form>
 
                 <%
@@ -184,7 +183,8 @@
 
             if (lsPics == null) {
         %>
-        <h2 style = "color: black;">No Pictures found</h2>
+       
+        <h2 style = "color: black; width: 100%; text-align: center; padding-top: 80px">No Pictures found</h2>
         <%
         } else {
             Iterator<Pic> iterator;
@@ -201,9 +201,9 @@
                     splitHT = hts.split(",");
                     for (int i = 0; i < 3; i++) {
                         try {%> 
-                        <form style="margin-top: 15px;" method="POST" action="../SearchHashtag" id="HTSearchForm<%=p.getSUUID()%>">   
-                            <a href="#" onclick="getHashtagName(this, '<%=p.getSUUID()%>');" style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%">#<%=splitHT[i]%></a>
-                            <input type="hidden" name="searchText" id="searchText" value="">
+                        <form style="margin-top: 15px;" method="POST" action="/InstagrAndrew/SearchHashtag" id="HTSearchForm<%=p.getSUUID()%>">   
+                            <a href="#" onclick="getHashtagName(this, '<%=p.getSUUID()%>');" style="margin-top: 4px; color: #39335B; float: left; margin-left: 48px; width: 100%">#<%=splitHT[i]%></a>
+                            <input type="hidden" name="searchText" id="searchText<%=p.getSUUID()%>" value="">
                         </form>
                          
                 <%
@@ -212,7 +212,7 @@
                     }
                 } else {
                 %>
-            <li><a style="margin-top: 5px; color: crimson; float: left; margin-left: 48px; width: 100%">No Hashtags</a></li> 
+            <li><a style="margin-top: 4px; color: crimson; float: left; margin-left: 48px; width: 100%">No Hashtags</a></li> 
                 <%
                     }
 
@@ -237,7 +237,7 @@
                 <input type="hidden" name="username" id="username" value ="<%=search%>">
                 <input type="hidden" name="hashtags" id="hashtags" value="<%=hashtagOutput%> ">
                 <input type="hidden" name="profPic" id="profPic" value ="<%=request.getAttribute("ProfilePic")%>">
-                <a style ="display: block; margin-left: 48px; margin-top: 15px; float: left" >
+                <a style ="display: block; margin-left: 48px; margin-top: 12px; float: left" >
                 <input type="image" name="Submit" src="/InstagrAndrew/Thumb/<%=p.getSUUID()%>"></a>
                 <!--<input type="submit" name="Submit" value="SUBMIT">-->
             </form>

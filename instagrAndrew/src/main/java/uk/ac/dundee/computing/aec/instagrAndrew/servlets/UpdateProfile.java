@@ -48,7 +48,6 @@ public class UpdateProfile extends HttpServlet {
         
         String action = request.getParameter("whatToDo");
         
-        System.out.println("ACTION: " + action);
         
         User us = new User();
         us.setCluster(cluster);
@@ -57,7 +56,6 @@ public class UpdateProfile extends HttpServlet {
             String user = request.getParameter("username");
             UserDetails UD = us.getProfileInfo(user, true);
             request.setAttribute("UserDetails", UD);
-            //get all details and set up thing    
             
         }else{
             
@@ -84,7 +82,6 @@ public class UpdateProfile extends HttpServlet {
                 }
                 
             }else{
-                System.out.println("USERNAME THING = " + user);
                 UserDetails UD = us.getProfileInfo(user, true);
                 request.setAttribute("UserDetails", UD);
             }

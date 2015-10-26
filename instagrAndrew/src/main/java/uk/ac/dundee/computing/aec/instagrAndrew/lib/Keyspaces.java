@@ -54,16 +54,16 @@ public final class Keyspaces {
                     + "  );";
             String CreateComments = "CREATE TABLE if not exists instagrAndrew.comments (\n"
                     + "      image_id UUID,\n"
-                    + "      date time_UUID,\n"
+                    + "      date timestamp,\n"
                     + "      content text,\n"
                     + "      username text,\n"
-                    + "      PRIMARY KEY (image_id, date))\n"
+                    + "      PRIMARY KEY (image_id, date)\n"
                     + "  );";
             
             String CreateLike = "CREATE TABLE if not exists instagrAndrew.likes (\n"
                     + "      image_id UUID,\n"
                     + "      liker text,\n"
-                    + "      PRIMARY KEY (image_id, liker))\n"
+                    + "      PRIMARY KEY (image_id, liker)\n"
                     + "  );";
             
             Session session = c.connect();
@@ -120,14 +120,13 @@ public final class Keyspaces {
             } catch (Exception et) {
                 System.out.println("Can't create Comments " + et);
             }
-            session.close();
             
             System.out.println("" + CreateLike);
             try {
                 SimpleStatement cqlQuery = new SimpleStatement(CreateLike);
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create Comments " + et);
+                System.out.println("Can't create Likes " + et);
             }
             session.close();
 

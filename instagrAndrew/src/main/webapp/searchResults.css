@@ -18,7 +18,7 @@ footer{
 body{
     margin-top: 80px;
     margin-left: 20px;
-    background-color: midnightblue;
+    background-color: #0b0f42;
     color: white;
     font-family: Tahoma, Geneva, sans-serif;
     background-attachment: fixed;
@@ -61,7 +61,7 @@ a:hover{
     margin-left: 90px;
     margin-top: 10px;
     position: relative;
-    width: 600px;
+    width: 60%;
     height: 70px;
 }
 
@@ -106,8 +106,7 @@ h1{
 div{
     /*
     margin-top: 0px;*/
-    background-color: white;
-    width: 80%;
+    width: 60%;
     margin-bottom: 15px;
     margin-left: 20px;
     height: 70px;

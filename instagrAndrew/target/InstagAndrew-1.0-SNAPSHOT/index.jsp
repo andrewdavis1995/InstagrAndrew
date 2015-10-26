@@ -45,8 +45,8 @@
                         <input type="hidden" name = "username" id="username" value="<%=UserName%>">
                     </form>
                 </div>  
-                            <form action="LogOut" method="POST">
-                                <input type="submit" value="Log Out" style="margin-left: 30px; margin-bottom: 15px; width: 150px"> 
+                            <form action="LogOut" method="POST" style="display: inline-block;" id="LogoutForm">
+                                <li><a onclick="document.getElementById('LogoutForm').submit();" href="#">Log Out</a></li>
                             </form>
 
 
@@ -54,7 +54,9 @@
                                 <%}
                                         }else{
                                             %>
-                            <li><a href="register.jsp">Register</a></li>
+                            <form style="display: inline-block" action="Register" method="POST" name="registerForm" id="registerForm">
+                                <li><a onclick="document.getElementById('registerForm').submit();" href="#">Register</a></li>
+                            </form>
                             
                             <form style="display: inline-block" action="Login" method="POST" name="loginForm" id="loginForm">
                                 <li><a onclick="submitLoginForm();" href="#">Login</a></li>
@@ -84,23 +86,8 @@
         }else{
         %>
             
-        <div class="container" style = "display: inline-block">
-            <div id="content-slider">
-                <div id="slider">
-                    <div id="mask">
-                        <ul>
-                            <img class="firstanimation" style = "margin-left:0;" src="developmentImages/1.JPG" alt="1"/>
-                            <img class="secondanimation" style = "margin-left:0;" src="developmentImages/2.JPG" alt="2"/>
-                            <img class="thirdanimation" style = "margin-left:0;" src="developmentImages/3.JPG" alt="3"/>
-                        </ul>
-                    </div>  <!-- End Mask -->
-                </div>  <!-- End Slider Container -->
-            </div>
-        </div>     
         
-        
-        
-        <div style = "background-image: url('developmentImages/login background.png'); margin-left: 50px; width: 360px; height: 260px; margin-top: 100px; display: inline-block;">
+        <div style = "background-size: cover; background-image: url('developmentImages/login background.png'); margin-left: 33%; width: 30%; height: 285px; margin-top: 100px; display: inline-block;">
             <form method="GET" action="Search">
                 <div style = "float: left; margin-left: 15px;">
                     <h5>Search for User: </h5>                                        

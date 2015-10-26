@@ -159,14 +159,18 @@ public class User {
         UserDetails ud = null;
         
         Session session = cluster.connect("instagrAndrew");
-        System.out.println("USER = " + user);
         PreparedStatement ps = session.prepare("select * from userprofiles WHERE login = ?");
         ResultSet rs = null;
+        try{
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
                 boundStatement.bind( // here you are binding the 'boundStatement'
                         user));
-        if (!rs.isExhausted()){
+        }catch(Exception exc){
+            System.out.println("Error" + exc.getMessage());
+        }
+        
+        if (rs != null && !rs.isExhausted()){
             
             for (Row row : rs) {
                String FN = row.getString("first_name");
@@ -176,8 +180,6 @@ public class User {
                String password = row.getString("password");
                Set<String> email = row.getSet("email", String.class);
                String banana = email.toString();
-               
-               System.out.println("PASSWORD IS: " + password);
                
                if(!change){
                    ud = new UserDetails(usern, FN, SN, PP, email);
@@ -208,10 +210,13 @@ public class User {
         Set<String> em = new TreeSet<String>();
         em.add(email);
         
-        session.execute( // this is where the query is executed
-                boundStatement.bind( // here you are binding the 'boundStatement'
-                        username, em, fName, surname, EncodedPassword));
-        //We are assuming this always works.  Also a transaction would be good here !
+        try{
+            session.execute(
+                boundStatement.bind(
+                    username, em, fName, surname, EncodedPassword));
+        }catch(Exception exc){
+            return false;
+        }
         
         return true;
     }
