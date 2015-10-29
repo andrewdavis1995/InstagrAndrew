@@ -105,7 +105,7 @@
                 }
 
 
-                output = output.substring(0, output.length()-2);
+                output = "Likes: " + output.substring(0, output.length()-2);
 
 
             }else{
@@ -123,9 +123,9 @@
         
         <div style="display: inline-block; background-color: lightblue; margin-left: 1%; width: 25%; vertical-align: top;">
         
-            <div id="likers" name="likers" style="position: absolute; width: 25%; height: 500px; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); z-index: 10; display: none">
+            <div id="likers" name="likers" style="overflow: auto; position: absolute; width: 25%; height: 500px; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); z-index: 10; display: none">
                 <div>   <!-- title div -->  
-                    <a href="#" style="color: white; display: inline-block" onclick="hideLikes();">Hide Likes</a>
+                    <h3><a href="#" style="color: white; display: inline-block" onclick="hideLikes();">Hide Likes</a></h3>
                     
                 </div>
                 <br>
@@ -136,7 +136,7 @@
                             <div id="<%=likes.get(i)%>">
                                 
                                 <form style="margin-top: 15px;" method="POST" action="Profile" id="LikeForm<%=likes.get(i)%>">
-                                    <a href="#" onclick="getProfileNameLikes(this);" style="margin-top: 10px; color: white; float: left; margin-left: 5px; width: 100%"><%=likes.get(i)%></a>
+                                    <a href="#" onclick="getProfileNameLikes(this);" style="margin-top: 10px; color: white; float: left; margin-left: 1%; width: 99%"><%=likes.get(i)%></a>
                                     <input type="hidden" name="username" id="username<%=likes.get(i)%>" value="">
                                 </form>
                                 

@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrAndrew.lib.Convertors;
+import uk.ac.dundee.computing.aec.instagrAndrew.models.PicModel;
 
 /**
  *
@@ -58,7 +59,10 @@ public class DeleteImage extends HttpServlet {
         String username = request.getParameter("username");
         UUID imageID = UUID.fromString(request.getParameter("imageID"));
         
-        deleteImage(date, username, imageID);
+        PicModel img = new PicModel();
+        img.setCluster(cluster);
+        
+        img.deleteImage(date, username, imageID);
         
         
         RequestDispatcher rd=request.getRequestDispatcher("/index.jsp");
@@ -66,28 +70,6 @@ public class DeleteImage extends HttpServlet {
         
     }
     
-    public void deleteImage(Timestamp date, String username, UUID imageId){
-        try {
-            
-            Session session = cluster.connect("instagrAndrew");
-
-            Date DateAdded = new Date();
-            
-            PreparedStatement psInsertPic = session.prepare("DELETE FROM userpiclist WHERE user=? AND pic_added=?");
-            BoundStatement bsInsertPic = new BoundStatement(psInsertPic);
-            session.execute(bsInsertPic.bind(username, date));
-
-            PreparedStatement psInsertPicToUser = session.prepare("DELETE FROM pics WHERE picid=?");
-            BoundStatement bsInsertPicToUser = new BoundStatement(psInsertPicToUser);
-            session.execute(bsInsertPicToUser.bind(imageId));
-            
-            session.close();
-
-        } catch (Exception ex) {
-            System.out.println("Error --> " + ex);
-        }
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

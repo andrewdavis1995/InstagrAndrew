@@ -20,7 +20,6 @@
         <nav>
             <ul>
                 <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
-                <li><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
 

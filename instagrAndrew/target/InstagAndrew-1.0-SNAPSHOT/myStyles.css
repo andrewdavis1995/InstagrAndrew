@@ -16,6 +16,15 @@ and open the template in the editor.
     top: 0;
 }
 
+.feedButton {
+    opacity: 1.0;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+}
+
+.feedButton:hover{
+    opacity: 0.6;
+    filter: alpha(opacity=60); /* For IE8 and earlier */
+}
 
 @keyframes cycle {
    0% { opacity: 1; }

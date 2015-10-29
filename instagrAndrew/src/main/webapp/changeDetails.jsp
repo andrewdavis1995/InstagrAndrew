@@ -61,7 +61,6 @@
         <nav>
             <ul>
                 <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
-                <li><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
         
@@ -80,8 +79,7 @@
                     <li style="margin-left: 15px; padding-bottom: 15px;">Password<br><input autocomplete="off" type="password" name="password" id = "password" style="width: 90%"></li><br>
                     <li style="margin-left: 15px; padding-bottom: 15px;">Confirm Password<br><input autocomplete="off" type="password" name="confirmPassword" id = "confirmPassword" style="width: 90%"></li><br>
                 </ul>
-                <br/>
-                <input type="submit" value="Update" style="margin-left: 15px; margin-bottom: 15px;"> 
+                <input type="submit" value="Update" style="margin-left: 50px; margin-top: 0; width: 200px; height: 40px"> 
             </form>
         </div>
         

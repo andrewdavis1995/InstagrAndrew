@@ -31,16 +31,18 @@
             <ul>
                 <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
                 <li class="nav"><a href="upload.jsp">Upload</a></li>
-                <li class="nav"><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
  
         <div style="width: 40%; display: inline-block;float: left; margin-left: 2%;">
-            <h1 style = "color: white; margin-left: 2%">SELECT FILE TO UPLOAD</h1>  
+            <h1 style = "color: white; margin-left: 2%">SELECT FILE TO UPLOAD</h1> 
         
         
             <form method="POST" enctype="multipart/form-data" action="Image">
                 <input type="file" id="files" name ="upfile" style = "color: white; margin-left: 3%; margin-bottom: 4%;"/>
+                                 
+                <h3 style = "color: white; margin-left: 2%">SELECTED IMAGE:</h3>  
+                
                 <img id = "preview" src ="developmentImages/no preview.png" style = "width: 500px; margin-left: 2%; border-style: solid; border-width: 2px; border-color: white;" name = "preview"height = 500;/>
 
 
@@ -187,18 +189,10 @@
 
             function removeHashtag(index){
                 
-                //alert(index);
-                
                 if(index == 1){
-                                        
-                    //alert("2 LEFT");
-                    
+                                       
                     var tmp = document.getElementById("hiddenHT2").value;
                     var tmp2 = document.getElementById("hiddenHT3").value;
-                    
-                    
-                    //alert(tmp);
-                    //alert(tmp2);
                     
                     document.getElementById("hiddenHT3").value = "";
                     document.getElementById("HT3").value = "";
@@ -212,7 +206,6 @@
                     
                 }else if(index == 2){
                     
-                    //alert("1 LEFT");
                     var tmp = document.getElementById("hiddenHT3").value;
                                         
                     document.getElementById("hiddenHT3").value = "";
@@ -223,8 +216,6 @@
                     hashIndex--;
                     
                 }else if(index  == 3){
-                    
-                    //alert("FULL");
                     
                     document.getElementById("hiddenHT3").value = "";
                     document.getElementById("HT3").innerHTML = "";

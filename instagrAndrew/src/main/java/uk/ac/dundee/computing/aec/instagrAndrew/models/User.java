@@ -120,10 +120,8 @@ public class User {
                 boundStatement.bind( // here you are binding the 'boundStatement'
                         username));
         if (rs.isExhausted()) {
-            System.out.println("No Such Profile - SUCCESS!!!");
             return false;
         } else {
-            System.out.println("Username Exists - FAILED!");
             return true;
         }
     }
@@ -447,7 +445,6 @@ public class User {
             while(picturesToReturn.size() < 20 && pictures.size() > 0){
                 
                 Timestamp currHighest = pictures.get(0).getDate();
-                System.out.println("TIMESTAMP: " + currHighest);
                 
                 int mostRecentIndex = 0;
                 for(int i = 1; i < pictures.size(); i++){

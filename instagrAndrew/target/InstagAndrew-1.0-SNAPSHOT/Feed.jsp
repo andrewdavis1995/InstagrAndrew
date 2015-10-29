@@ -29,7 +29,7 @@
         
     </head>
     
-    <body style="margin-top: 80px;">
+    <body background="/InstagrAndrew/developmentImages/grey swirls.png" style="background-size: cover; margin-top: 80px;">
         <%
             ArrayList<Pic> pictures = (ArrayList<Pic>)request.getAttribute("pictures");
             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
@@ -50,62 +50,68 @@
             </ul>
         </nav>    
         
-        <h1 style="margin-left: 40px;" >Recent Activity from people you Follow:</h1>
+        <h1 style="margin-left: 40px; padding-top: 5px;" >Recent Activity from people you Follow:</h1>
                     
         <%
-            for(int i =0; i < pictures.size(); i++){
-                
-                String h = pictures.get(i).getHashtag();
-                String[] hashtags = h.split(",");
-                String hashtagOutput = "";
-                
-                for(int j = 0; j < hashtags.length; j++){
-                    hashtagOutput += "#" + hashtags[j] + ", ";
+            if(pictures.size() > 0){
+        
+                for(int i =0; i < pictures.size(); i++){
+
+                    String h = pictures.get(i).getHashtag();
+                    String[] hashtags = h.split(",");
+                    String hashtagOutput = "";
+                    
+                    for(int j = 0; j < hashtags.length; j++){
+                        hashtagOutput += "#" + hashtags[j] + ", ";
+                    }
+
+                    if(hashtagOutput.length() > 0){
+                        hashtagOutput = hashtagOutput.substring(0, hashtagOutput.length() - 2);
+                    }
+
+                    //getUsername
+
+                    %>
+                    <div style="width: 90%; margin-left: 3%; margin-bottom: 20px; margin-right: 0; background-color: lightblue">
+
+                        <div style="width: 59%; display: inline-block; ">
+                            <form method="POST" action="/InstagrAndrew/Comments">
+                                <input type="hidden" name="imageSrc" id="imageSrc" value ="<%= pictures.get(i).getSUUID()%>">
+                                <input type="hidden" name="whatToDo" id="whatToDo" value ="read">
+                                <input type="hidden" name="username" id="username" value ="<%=pictures.get(i).getUser()%>">
+                                <input type="hidden" name="hashtags" id="hashtags" value="<%=hashtagOutput%> ">
+                                <input type="hidden" name="profPic" id="profPic" value ="<%=request.getAttribute("ProfilePic")%>">
+                                <input style="width: 93%; margin-left: 15px; margin-bottom: 15px; margin-top: 15px;  margin-right: 15px" type="image" name="Submit" src="/InstagrAndrew/Image/<%=pictures.get(i).getSUUID()%>"></a>
+                                <!--<input type="submit" name="Submit" value="SUBMIT">-->
+                            </form>
+                        </div>
+
+
+                        <div style="display: inline-block; width: 37%; vertical-align: top; height: 350px; background-color: #0b0f42; margin-left: 0; margin-bottom: 15px; margin-top: 15px; background-image:url('developmentImages/blue swirls.png')">
+
+                            <form style="margin-left: 20px; margin-top: 15px;" method="POST" action="Profile/<%=pictures.get(i).getUser()%>" id="usernameForm<%=pictures.get(i).getUser()%>"> 
+                                <input type="hidden" name="username" value="<%=pictures.get(i).getUser()%>">
+                                <h2><a href="#" onclick="document.getElementById('usernameForm<%=pictures.get(i).getUser()%>').submit()"><%=pictures.get(i).getUser()%></a></h2>
+                            </form>
+
+                            <%
+                                for(int j = 0; j < hashtags.length; j++){%>
+                                    <form style="margin-top: 15px; margin-left: 30px" method="POST" action="/InstagrAndrew/SearchHashtag" id="HTSearchForm<%=pictures.get(i).getSUUID()%>">   
+                                        <a href="#" onclick="getHashtagName(this, '<%=pictures.get(i).getSUUID()%>');" style="margin-top: 4px; color: white; float: left; margin-left: 10px; width: 100%">#<%=hashtags[j]%></a>
+                                        <input type="hidden" name="searchText" id="searchText<%=pictures.get(i).getSUUID()%>" value="">
+                                    </form>
+
+                                <%}
+                            %>
+
+                        </div>
+                    </div>
+            <%
                 }
-                
-                if(hashtagOutput.length() > 0){
-                    hashtagOutput = hashtagOutput.substring(0, hashtagOutput.length() - 2);
-                }
-                
-                //getUsername
-                
+            }else{
                 %>
-                <div style="width: 90%; margin-left: 3%; margin-bottom: 20px; margin-right: 0; background-color: lightblue;">
-                    
-                    <div style="width: 59%; display: inline-block; ">
-                        <form method="POST" action="/InstagrAndrew/Comments">
-                            <input type="hidden" name="imageSrc" id="imageSrc" value ="<%= pictures.get(i).getSUUID()%>">
-                            <input type="hidden" name="whatToDo" id="whatToDo" value ="read">
-                            <input type="hidden" name="username" id="username" value ="<%=pictures.get(i).getUser()%>">
-                            <input type="hidden" name="hashtags" id="hashtags" value="<%=hashtagOutput%> ">
-                            <input type="hidden" name="profPic" id="profPic" value ="<%=request.getAttribute("ProfilePic")%>">
-                            <a style ="display: block; margin-left: 48px; margin-top: 12px; float: left" >
-                            <input style="width: 93%; margin-left: 15px; margin-bottom: 15px; margin-top: 15px;  margin-right: 15px" type="image" name="Submit" src="/InstagrAndrew/Image/<%=pictures.get(i).getSUUID()%>"></a>
-                            <!--<input type="submit" name="Submit" value="SUBMIT">-->
-                        </form>
-                    </div>
-                    
-                    
-                    <div style="display: inline-block; width: 37%; vertical-align: top; height: 350px; background-color: #0b0f42; margin-left: 0; margin-bottom: 15px; margin-top: 15px;">
-                        
-                        <form style="margin-left: 20px; margin-top: 15px;" method="POST" action="Profile/<%=pictures.get(i).getUser()%>" id="usernameForm<%=pictures.get(i).getUser()%>"> 
-                            <input type="hidden" name="username" value="<%=pictures.get(i).getUser()%>">
-                            <h2><a href="#" onclick="document.getElementById('usernameForm<%=pictures.get(i).getUser()%>').submit()"><%=pictures.get(i).getUser()%></a></h2>
-                        </form>
-                        
-                        <%
-                            for(int j = 0; j < hashtags.length; j++){%>
-                                <form style="margin-top: 15px; margin-left: 30px" method="POST" action="/InstagrAndrew/SearchHashtag" id="HTSearchForm<%=pictures.get(i).getSUUID()%>">   
-                                    <a href="#" onclick="getHashtagName(this, '<%=pictures.get(i).getSUUID()%>');" style="margin-top: 4px; color: white; float: left; margin-left: 10px; width: 100%">#<%=hashtags[j]%></a>
-                                    <input type="hidden" name="searchText" id="searchText<%=pictures.get(i).getSUUID()%>" value="">
-                                </form>
-                                
-                            <%}
-                        %>
-                        
-                    </div>
-                </div>
-        <%
+                    <h2 style = "color: white; width: 100%; text-align: center; padding-top: 180px">No Pictures found</h2>
+                <%
             }
         %>
         

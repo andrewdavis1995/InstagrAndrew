@@ -86,8 +86,9 @@ public class Comments extends HttpServlet {
             if(whatToPost.equals("POST")){
                 switch (type) {
                     case "comment":
-                        System.out.println("HERE");
-                        if(content != ""){
+                        content = content.trim();
+                        
+                        if(!content.equals("")){
                             cm.insertComment(id, username, content);
                         }   
                         break;
@@ -114,12 +115,8 @@ public class Comments extends HttpServlet {
                 request.setAttribute("ProfPic", null);
             }
 
-            System.out.println("THERE");
-
             String path = request.getParameter("imageSrc");
             request.setAttribute("imageSource", path);
-
-            System.out.println("THERE");
 
             String user = request.getParameter("username");
             request.setAttribute("username", user);
@@ -129,14 +126,8 @@ public class Comments extends HttpServlet {
             ArrayList<CommentModel> comments = cm.getComments(image);
             request.setAttribute("comments", comments);
 
-            System.out.println("THERE");
-
             ArrayList<String> likes = cm.getLikes(image);
             request.setAttribute("likes", likes);
-
-            System.out.println("HERE");
-
-            
             
             RequestDispatcher rd=request.getRequestDispatcher("displayImage.jsp");
             rd.forward(request,response);
@@ -160,49 +151,50 @@ public class Comments extends HttpServlet {
             throws ServletException, IOException {
         
         
-            
-        String user = request.getParameter("username");
-        request.setAttribute("username", user);
-
-        String hashtag = request.getParameter("hashtags");
-        request.setAttribute("hashtags", hashtag);
-
-        String PP = request.getParameter("profPic");
         try{
-            UUID profpic = UUID.fromString(PP);
-            request.setAttribute("ProfPic", profpic);
+            String user = request.getParameter("username");
+            request.setAttribute("username", user);
+
+            String hashtag = request.getParameter("hashtags");
+            request.setAttribute("hashtags", hashtag);
+
+            String PP = request.getParameter("profPic");
+            try{
+                UUID profpic = UUID.fromString(PP);
+                request.setAttribute("ProfPic", profpic);
+            }catch(Exception ex){
+                //call method to find profilePic
+                User us = new User();
+                us.setCluster(cluster);
+                UUID profpic = us.getProfilePicture(user);
+                request.setAttribute("ProfPic", profpic);            
+            }
+
+            String path = request.getParameter("imageSrc");
+            request.setAttribute("imageSource", path);
+
+
+
+            UUID image;
+            image = UUID.fromString(path);
+
+
+            ArrayList<String> likes = cm.getLikes(image);
+            request.setAttribute("likes", likes);
+
+
+            ArrayList<CommentModel> comments = cm.getComments(image);
+            request.setAttribute("comments", comments);
+
+            request.setAttribute("username", user);
+
+            request.setAttribute("whatToDo", "Read");
+
+
+            RequestDispatcher rd=request.getRequestDispatcher("/displayImage.jsp");
+            rd.forward(request,response);
         }catch(Exception ex){
-            //call method to find profilePic
-            User us = new User();
-            us.setCluster(cluster);
-            UUID profpic = us.getProfilePicture(user);
-            request.setAttribute("ProfPic", profpic);            
         }
-
-        String path = request.getParameter("imageSrc");
-        request.setAttribute("imageSource", path);
-
-
-
-        UUID image;
-        image = UUID.fromString(path);
-
-
-        ArrayList<String> likes = cm.getLikes(image);
-        request.setAttribute("likes", likes);
-
-
-        ArrayList<CommentModel> comments = cm.getComments(image);
-        request.setAttribute("comments", comments);
-
-        request.setAttribute("username", user);
-
-        request.setAttribute("whatToDo", "Read");
-        
-                
-        RequestDispatcher rd=request.getRequestDispatcher("/displayImage.jsp");
-        rd.forward(request,response);
-                
     }
     
     

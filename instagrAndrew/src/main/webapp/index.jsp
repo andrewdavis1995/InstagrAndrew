@@ -87,33 +87,42 @@
                 </form>
             </div>
             
+            
         <%
         }else{
         %>
             
         
-        <div style = "background-size: cover; background-image: url('developmentImages/login background.png'); margin-left: 33%; width: 30%; height: 285px; margin-top: 100px; display: inline-block;">
+        <div style = "background-size: cover; background-image: url('developmentImages/login background.png'); margin-left: 14%; width: 30%; height: 285px; margin-top: 100px; display: inline-block;">
+           
             <form method="GET" action="Search">
-                <div style = "float: left; margin-left: 15px;">
-                    <h5>Search for User: </h5>                                        
-                    <input type="text" name="searchText">
-                    <input type="submit" value="Search" style="margin-left: 15px; margin-bottom: 15px;" src="developmentImages/button.png"> 
+            
+                <div style = "float: left; margin-left: 15px; margin-top: 5px">
+                    <h1>SEARCH:</h1>
+                    <h5 style="margin-bottom: 10px;">Search for User: </h5>                                        
+                    <input type="text" name="searchText" style="width: 270px; height: 20px">
+                    <input type="submit" value="Search" style="margin-left: 10px; margin-bottom: 15px; height: 26px; width: 75px"> 
                 </div>
             </form>
             
             <form method="GET" action="SearchHashtag">
                 <div style = "float: left; margin-left: 15px;">
-                    <h5>Search for Hashtags: </h5>                                        
-                    <input type="text" name="searchText">
-                    <input type="submit" value="Search" style="margin-left: 15px; margin-bottom: 15px;" src="developmentImages/button.png"> 
+                    <h5 style="margin-bottom: 10px;">Search for Hashtags: </h5>                                        
+                    <input type="text" name="searchText" style="width: 270px; height: 20px">
+                    <input type="submit" value="Search" style="margin-left: 10px; margin-bottom: 15px; height: 26px; width: 75px"> 
                 </div>
             </form>
         </div>
         
-        <form method="POST" action="Feed">
-            <input type="hidden" name="username" value="<%=lg.getUsername()%>">
-            <input type="submit" value="Search" style="margin-left: 15px; margin-bottom: 15px;" src="developmentImages/button.png">
-        </form>
+        
+        <div style = "background-size: cover; background-image: url('developmentImages/login background.png'); width: 30%; height: 285px; margin-top: 100px; display: inline-block; margin-left: 6%">
+            <form method="POST" action="Feed">
+                <div style = "float: left; margin-left: 15px;">
+                    <input type="hidden" name="username" value="<%=lg.getUsername()%>">
+                    <input class='feedButton' type="Image" style="margin-left: 60px; margin-top: 20px; width: 65%" src="developmentImages/viewNewsfeed.png">
+                </div>
+            </form>        
+        </div>
         
         
         <%         

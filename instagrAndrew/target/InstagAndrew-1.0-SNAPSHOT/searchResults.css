@@ -58,10 +58,9 @@ a:hover{
 }
 
 #profileInfo{
-    margin-left: 90px;
-    margin-top: 10px;
-    position: relative;
-    width: 60%;
+    margin-left: 0px;
+    margin-top: 0px;
+    vertical-align: top;
     height: 70px;
 }
 

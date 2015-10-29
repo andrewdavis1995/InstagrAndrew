@@ -38,7 +38,10 @@ public class CommentModel {
         
     }
     
-    
+    public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
+    }
+   
     public CommentModel(String c, String u){
         this.content = c;
         this.username = u;
@@ -55,22 +58,25 @@ public class CommentModel {
     
     public ArrayList<CommentModel> getComments(UUID id){
         
+        //setup arraylist
         ArrayList<CommentModel> comments = new ArrayList<CommentModel>();
-        
-        
+                
         Session session = cluster.connect("instagrAndrew");
+        //create prepared statement
         PreparedStatement ps = session.prepare("select content,username,date from comments where image_id=? ORDER BY date DESC");
-       
+        
         BoundStatement boundStatement = new BoundStatement(ps);
         
         ResultSet rs = null;
         
+        //bind the statement and execute
         rs = session.execute( // this is where the query is executed
                 boundStatement.bind(id));
         if (rs.isExhausted()) {
             System.out.println("No Images returned");
             return null;
         } else {
+            //for each row, get the username and content and create a CommentModel object (adding it to list)
             for (Row row : rs) {
                 String name = row.getString("username");
                 String words = row.getString("content");
@@ -81,30 +87,24 @@ public class CommentModel {
         }
         
         return comments;
-        
     }
     
     
     public boolean insertComment(UUID imageID, String username, String content){
         
-        System.out.println("THERE");
-        
+        //get the current time/date. Derived from:         
         //http://alvinalexander.com/java/java-timestamp-example-current-time-now
         Calendar calendar = Calendar.getInstance();
         java.util.Date now = calendar.getTime();
         java.sql.Timestamp time = new java.sql.Timestamp(now.getTime());
-        
-        
-        System.out.println("THING");
-        
+              
+        //create prepared statement
         Session session = cluster.connect("instagrAndrew");
         PreparedStatement ps = session.prepare("insert into comments (image_id, username, content, date) Values (?,?,?,?)");
-       
-        
-        System.out.println("SGFDAD");
-        
+               
         BoundStatement boundStatement = new BoundStatement(ps);
         
+        //bind the statement and execute
         try{
             session.execute( 
                 boundStatement.bind(
@@ -112,32 +112,32 @@ public class CommentModel {
         }catch(Exception exc){
             return false;
         }
-        
-        
-        System.out.println("gthyjkl");
-        
+                
         return true;
     }
     
-    public void setCluster(Cluster cluster) {
-        this.cluster = cluster;
-    }
-   
+    
     
     public ArrayList<String> getLikes(UUID id){
+        //create arrayList
         ArrayList<String> likers = new ArrayList<String>();
         
+        //create bound statement
         Session session = cluster.connect("instagrAndrew");
         PreparedStatement ps = session.prepare("select liker from likes where image_id =? order by liker ASC");
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
-        rs = session.execute( // this is where the query is executed
-                boundStatement.bind( // here you are binding the 'boundStatement'
+        
+        //bind the statement and execute
+        rs = session.execute( 
+                boundStatement.bind( 
                         id));
+        //if no results, return null
         if (rs.isExhausted()) {
-            System.out.println("NO LIKES");
             return null;
         } else {
+            
+            //otherwise, loop through all items and add to list
             for (Row row : rs) {
                 String name = row.getString("liker");
                 likers.add(name);
@@ -147,13 +147,16 @@ public class CommentModel {
         return likers;
     }
     
+    
     public void deleteLike(String user, UUID image){
+        
+        //create prepared statement
         Session session = cluster.connect("instagrAndrew");
         PreparedStatement ps = session.prepare("delete from likes WHERE liker=? AND image_id=?");
        
-        ResultSet rs = null;
+        //execute bound statement
         BoundStatement boundStatement = new BoundStatement(ps);
-        rs = session.execute( // this is where the query is executed
+        session.execute( // this is where the query is executed
                 boundStatement.bind( // here you are binding the 'boundStatement'
                         user, image));
     }

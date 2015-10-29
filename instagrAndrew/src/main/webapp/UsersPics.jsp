@@ -23,15 +23,12 @@
         %>
     
         <script>
-
             function showSaveButton() {
                 document.getElementById("saveButton").style.display = 'inline-block';
             }
-
             function showChangeButton() {
                 document.getElementById("changeImageBtn").style.display = 'block';
             }
-
             function hideChangeButton() {
                 document.getElementById("changeImageBtn").style.display = 'none';
             }
@@ -42,16 +39,6 @@
                 document.getElementById("searchText" + imageName).value = cut;
                 var path = "HTSearchForm" + imageName;
                 
-                function confirmDelete() {
-                    var txt;
-                    var r = confirm("Are you sure you wish to delete your account");
-                    if (r == true) {
-                        txt = "You pressed OK!";
-                    } else {
-                        txt = "You pressed Cancel!";
-                    }
-                    document.getElementById("demo").innerHTML = txt;
-                }
                 
                 document.getElementById(path).submit();
             }
@@ -59,7 +46,6 @@
             function changeDeleteValue(){
                 document.getElementById("delete").value = "true";
             }
-
         </script>
 
     </head>
@@ -69,7 +55,6 @@
         <%
             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
             String currentUser = lg.getUsername(); 
-
             search = (String)request.getAttribute("search");
             
             
@@ -81,7 +66,6 @@
                 followees = (ArrayList<String>)request.getAttribute("followees");
             }catch(Exception ee){}
             
-
         %>
 
         <nav style="top: 0">
@@ -147,7 +131,6 @@
                             <img id="ProfPic" src = "/InstagrAndrew/Image/<%= request.getAttribute("ProfilePic")%>" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
                             <%
                         }
-
                         %>
                         
                         <h2 id="fullName" style="color: white; position: absolute; top: 0px; display: inline-block; left: 120px; margin-left: 20px; margin-top: 0;"> NAME </h2>
@@ -181,18 +164,14 @@
                                         var f = files[0];
                                         var reader = new FileReader();
                                         var img = new Image;
-
                                         reader.onload = (function (theFile) {
                                             return function (e) {
                                                 // help from here: http://www.onlinetools.org/articles/unobtrusivejavascript/chapter2.html
                                                 document.images["ProfPic"].src = e.target.result;
-
                                                 img.src = reader.result;
                                                 showSaveButton();
-
                                             };
                                         })(f);
-
                                         reader.readAsDataURL(f);
                                     }
                                 } else {
@@ -224,13 +203,10 @@
             String[] sdfdsf = new String[3];
             email.toArray(sdfdsf);
             emailString = sdfdsf[0];
-
             if (name == null) {
                 name = "";
             }
-
             int count = 0;
-
             if (lsPics == null) {
         %>
        
@@ -269,20 +245,16 @@
                     </form>
                 <%
                     }
-
                     String hashtagOutput = "";
-
                     for (int i = 0; i < 3; i++) {
                         try {
                             hashtagOutput += "#" + splitHT[i] + ", ";
                         } catch (Exception e) {
                         }
                     }
-
                     if (hashtagOutput.length() > 1) {
                         hashtagOutput = hashtagOutput.substring(0, hashtagOutput.length() - 2);
                     }
-
                 %>
 
             <form method="POST" action="/InstagrAndrew/Comments">
@@ -426,8 +398,6 @@
         
     </body>
 </html>
-
-
 
 
 

@@ -53,13 +53,10 @@ public class Feed extends HttpServlet {
         User us = new User();
         us.setCluster(cluster);
         
-        System.out.println("BEGIN");
         
         ArrayList<String> followees = us.getFollowees(username);
-        System.out.println("START");
         ArrayList<Pic> pictures = us.getFeedItems(username, followees);
         
-        System.out.println("DONE");
         
         request.setAttribute("pictures", pictures);        
         

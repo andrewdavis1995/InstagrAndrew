@@ -40,6 +40,7 @@ import static org.imgscalr.Scalr.*;
 import java.awt.Color;
 import org.imgscalr.Scalr.Method;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -369,20 +370,18 @@ public class PicModel {
             for (Row row : rs) {
                 Pic pic = new Pic();
                 java.util.UUID UUID = row.getUUID("picid");
-                System.out.println("UUID: " + UUID.toString());
-                pic.setUUID(UUID);
                 
                 Date d = row.getDate("pic_added");
                 java.sql.Timestamp tmp = new java.sql.Timestamp(d.getTime());
                 
+                
+                
+                pic.setUUID(UUID);
                 pic.setDate(tmp);
                 
                 String ht = row.getString("hashtag");
                 if(ht != null){
-                    //System.out.println("Hashtag: " + ht);
                     pic.setHashtag(ht);
-                }else{
-                    //System.out.println("Hashtag is NULL");
                 }
                 Pics.add(pic);
 
@@ -419,7 +418,6 @@ public class PicModel {
         Session session = cluster.connect("instagrAndrew");
         ByteBuffer bImage = null;
         String type = null;
-        //String hashtag = "";
         int length = 0;
         String date = "";
         try {
@@ -530,4 +528,28 @@ public class PicModel {
         return picList;
     }
 
+    
+    
+    public void deleteImage(Timestamp date, String username, UUID imageId){
+        try {
+            
+            Session session = cluster.connect("instagrAndrew");
+
+            Date DateAdded = new Date();
+            
+            PreparedStatement psInsertPic = session.prepare("DELETE FROM userpiclist WHERE user=? AND pic_added=?");
+            BoundStatement bsInsertPic = new BoundStatement(psInsertPic);
+            session.execute(bsInsertPic.bind(username, date));
+
+            PreparedStatement psInsertPicToUser = session.prepare("DELETE FROM pics WHERE picid=?");
+            BoundStatement bsInsertPicToUser = new BoundStatement(psInsertPicToUser);
+            session.execute(bsInsertPicToUser.bind(imageId));
+            
+            session.close();
+
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex);
+        }
+    }
+    
 }

@@ -16,13 +16,12 @@
     </head>
     
     
-    <body>
+    <body background="/InstagrAndrew/developmentImages/wood.png">
               
         <nav>
             <ul>
                 <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
                 <li style="margin-left: 20px" class="nav"><a href="/InstagrAndrew/upload.jsp">Upload</a></li>
-                <li style="margin-left: 20px" class="nav"><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
         
@@ -41,29 +40,31 @@
                         currentUser = lg.getUsername();
                     }
         %>
-                    <div style="background-image: url('developmentImages/userprofileBG.png');">
+                    <div style="background-image: url('developmentImages/userprofileBG.png'); background-size: cover; width: 40%; display: inline-block; margin-left: 6%; margin-bottom: 25px">
                         
-                        <form method="POST" action="Profile/<%=username%>"> 
-                            <%if(profiles.get(i).getProfilePic() != null){ %>
-                                <input type="image" style="left: 40px; width:70px; height: 70px; position: absolute;" src="/InstagrAndrew/Image/<%=profiles.get(i).getProfilePic()%>" value="" alt="">
-                            <% }else{ %>
-                                <input type="image" style="left: 40px; width:70px; height: 70px; position: absolute;" src="developmentImages/question.png" value="" alt="">
-                            <% } %>
-                            <input type="hidden" name="username" id="username" value="<%=profiles.get(i).getUsername()%>">
-                        </form>
+                        <div style="width: 70px; height: 70px; margin-left: 0; display: inline-block"> <!--profilePic-->
+                            <form method="POST" action="Profile/<%=username%>"> 
+                                <%if(profiles.get(i).getProfilePic() != null){ %>
+                                    <input type="image" style="width:100%; height: 70px; margin-left: 0;" src="/InstagrAndrew/Image/<%=profiles.get(i).getProfilePic()%>" value="" alt="">
+                                <% }else{ %>
+                                    <input type="image" style="width:100%; height: 70px; margin-left: 0;" src="developmentImages/question.png" value="" alt="">
+                                <% } %>
+                                <input type="hidden" name="username" id="username" value="<%=profiles.get(i).getUsername()%>">
+                            </form>
+                        </div>
                        
-                        <div id ="profileInfo">
+                        <div id ="profileInfo" style="display: inline-block;">
                           <%if (username.equals(currentUser)) {
                                 %>
-                                    <h3 style="color: red;">YOUR PROFILE</h3>
+                                    <h3 style="color: darkred; margin-bottom: 0; padding-top: 5px; margin-top: 0; vertical-align: top;">YOUR PROFILE</h3>
                                 <%
                             }else{
                                 %>
-                                    <h3 style="color: black;"><%=profiles.get(i).getUsername()%></h3>
+                                    <h3 style="color: black; margin-bottom: 0; padding-top: 5px; margin-top: 0; vertical-align: top;"><%=profiles.get(i).getUsername()%></h3>
                                 <%
                             }
                             %>
-                            <p id="profileName"><%=username%></p>
+                            <p style="margin-left: 0; margin-top: 5px" id="profileName"><%=username%></p>
                         </div>
                     </div>  
         <%
