@@ -29,7 +29,7 @@
             <ul>
                     
                 <h1 style = "display: inline; font-size: 1.7em; margin-left: 250px;">InstagrAndrew</h1>
-                <li><a href="upload.jsp">Upload</a></li>
+                
                     <%
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
                                                 
@@ -38,7 +38,12 @@
                             if (lg.getlogedin()) {
                                 User us = new User();
                         %>
-
+                <form style="display: inline-block; margin-left: 60px" action="/InstagrAndrew/Upload" name="uploadForm" id="uploadForm" method="POST">
+                    <input type="hidden" name="username" value="<%=UserName%>">
+                    <input type="hidden" name="whatToDo" value="load">
+                    <a href="#" onclick="document.getElementById('uploadForm').submit();">Upload</a>
+                </form>
+                    
                 <div style="position: absolute; left: calc(100% - 200px); width: 200px; height: 85px; float: right; margin-top: 0; top: 0;"> 
                     <form action="Profile/<%=UserName%>" method="POST">
                         <input type="Image" name="Submit" src="developmentImages/yourProfile.png" style="width:220px; height: 65px; float: right; margin-top: 0; top: 0">
@@ -104,7 +109,13 @@
                 </div>
             </form>
         </div>
-
+        
+        <form method="POST" action="Feed">
+            <input type="hidden" name="username" value="<%=lg.getUsername()%>">
+            <input type="submit" value="Search" style="margin-left: 15px; margin-bottom: 15px;" src="developmentImages/button.png">
+        </form>
+        
+        
         <%         
             }
            

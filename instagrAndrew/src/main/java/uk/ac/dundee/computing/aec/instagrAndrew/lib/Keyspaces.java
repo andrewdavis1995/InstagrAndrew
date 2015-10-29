@@ -66,6 +66,12 @@ public final class Keyspaces {
                     + "      PRIMARY KEY (image_id, liker)\n"
                     + "  );";
             
+            String CreateFollows = "CREATE TABLE if not exists instagrAndrew.follows (\n"
+                    + "      follower varchar,\n"
+                    + "      followee varchar,\n"
+                    + "      PRIMARY KEY (follower, followee)\n"
+                    + "  );";
+            
             Session session = c.connect();
             try {
                 PreparedStatement statement = session
@@ -128,6 +134,15 @@ public final class Keyspaces {
             } catch (Exception et) {
                 System.out.println("Can't create Likes " + et);
             }
+            
+            System.out.println("" + CreateFollows);
+            try {
+                SimpleStatement cqlQuery = new SimpleStatement(CreateFollows);
+                session.execute(cqlQuery);
+            } catch (Exception et) {
+                System.out.println("Can't create Likes " + et);
+            }
+            
             session.close();
 
         } catch (Exception et) {

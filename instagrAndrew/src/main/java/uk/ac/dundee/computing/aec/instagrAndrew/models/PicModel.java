@@ -19,6 +19,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.utils.Bytes;
+import static com.oracle.jrockit.jfr.ContentType.Timestamp;
 import com.sun.corba.se.spi.presentation.rmi.StubAdapter;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -209,6 +210,7 @@ public class PicModel {
             System.out.println("Error --> " + ex);
         }
     }
+    
 
     public byte[] picresize(String picid,String type, boolean profPic) {
         try {
@@ -354,7 +356,7 @@ public class PicModel {
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
         java.util.LinkedList<Pic> Pics = new java.util.LinkedList<>();
         Session session = cluster.connect("instagrAndrew");
-        PreparedStatement ps = session.prepare("select picid, hashtag from userpiclist where user =?");
+        PreparedStatement ps = session.prepare("select picid, hashtag, pic_added from userpiclist where user =?");
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
@@ -369,6 +371,12 @@ public class PicModel {
                 java.util.UUID UUID = row.getUUID("picid");
                 System.out.println("UUID: " + UUID.toString());
                 pic.setUUID(UUID);
+                
+                Date d = row.getDate("pic_added");
+                java.sql.Timestamp tmp = new java.sql.Timestamp(d.getTime());
+                
+                pic.setDate(tmp);
+                
                 String ht = row.getString("hashtag");
                 if(ht != null){
                     //System.out.println("Hashtag: " + ht);
@@ -489,6 +497,8 @@ public class PicModel {
                 
                 UUID uuid = row.getUUID("picId");
                 String us = row.getString("user");
+                Date d = row.getDate("pic_added");
+                java.sql.Timestamp tmp = new java.sql.Timestamp(d.getTime());
                 
                 String[] tags;
                 try{
@@ -502,18 +512,15 @@ public class PicModel {
                 if(tags!=null){
                     for(int i = 0; i < tags.length; i++){
                         
-                        System.out.print(tags[i].toLowerCase() + "-" + searched.toLowerCase() + "-");
-                        
                         if (tags[i].toLowerCase().equals(searched.toLowerCase())){
-                            System.out.print("      MATCH!!!");
                             Pic toAdd = new Pic();
                             toAdd.setUUID(uuid);
+                            toAdd.setDate(tmp);
                             toAdd.setUser(us);
                             toAdd.setHashtag(fullString);
                             picList.add(toAdd);
                             break;
                         }
-                        System.out.println();
                     }
                 }
             }

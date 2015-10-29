@@ -81,6 +81,7 @@
                                 <form method="POST" action="Comments">
                                     <input type="hidden" name="imageSrc" id="imageSrc" value ="<%= p.getSUUID()%>">
                                     <input type="hidden" name="whatToDo" id="whatToDo" value ="read">
+                                    <input type="hidden" name="dateAdded" id="dateAdded" value="<%=p.getDate()%>">
                                     <input type="hidden" name="username" id="username" value ="<%=p.getUser()%>">
                                     <input type="hidden" name="hashtags" id="hashtags" value="<%=hashtagOutput%> ">
                                     <input type="hidden" name="profPic" id="profPic" value ="<%=request.getAttribute("ProfilePic")%>">

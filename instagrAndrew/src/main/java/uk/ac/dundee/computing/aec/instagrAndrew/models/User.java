@@ -15,6 +15,8 @@ import com.datastax.driver.core.Session;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -41,8 +43,8 @@ public class User {
                 Validation v = new Validation("Please a valid First Name", false); 
                 return v;
             }
-            //  -   no illegal characters -->     `¬!"£$%^&*()_-+='~#/?>,<|\
-            if (fName.contains("`¬!\"£$%^&*()_-+='~#/?>,<|\\)")){ 
+            //  -   no illegal characters -->     `Â¬!"Â£$%^&*()_-+='~#/?>,<|\
+            if (fName.contains("`Â¬!\"Â£$%^&*()_-+='~#/?>,<|\\)")){ 
                 Validation v = new Validation("Please a valid First Name - only standard characters are permitted", false); 
                 return v;
             }
@@ -53,8 +55,8 @@ public class User {
                 Validation v = new Validation("Please a valid Surname", false); 
                 return v;
             }
-            //  -   no illegal characters -->     `¬!"£$%^&*()_-+='~#/?>,<|\
-            if (surname.contains("`¬!\"£$%^&*()_-+='~#/?>,<|\\)")){ 
+            //  -   no illegal characters -->     `Â¬!"Â£$%^&*()_-+='~#/?>,<|\
+            if (surname.contains("`Â¬!\"Â£$%^&*()_-+='~#/?>,<|\\)")){ 
                 Validation v = new Validation("Please a valid Surname - only standard characters are permitted", false); 
                 return v;
             }
@@ -193,6 +195,83 @@ public class User {
         return ud;
     }
     
+    
+    public void removeFollow(String userToUnFollow, String currentUser){
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("delete from follows WHERE follower=? AND followee=?");
+       
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        currentUser, userToUnFollow));
+    }
+    
+    public void addFollow(String userToFollow, String currentUser){
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("insert into follows (follower, followee) VALUES (?,?)");
+       
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        currentUser, userToFollow));
+    }
+    
+    
+    
+    public ArrayList<String> getFollowers(String user){
+        ArrayList<String> followers = new ArrayList<String>();
+                
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("select follower from follows WHERE followee = ? ALLOW FILTERING");
+        ResultSet rs = null;
+        try{
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        user));
+        }catch(Exception exc){
+            System.out.println("Error" + exc.getMessage());
+        }
+        
+        if (rs != null && !rs.isExhausted()){
+            
+            for (Row row : rs) {
+               String name = row.getString("follower");
+               followers.add(name);
+            }
+        }
+        
+        return followers;
+    }
+    
+    public ArrayList<String> getFollowees(String user){
+        
+        ArrayList<String> followees = new ArrayList<String>();
+        
+        Session session = cluster.connect("instagrAndrew");
+        PreparedStatement ps = session.prepare("select followee from follows WHERE follower = ?");
+        ResultSet rs = null;
+        try{
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        user));
+        }catch(Exception exc){
+            System.out.println("Error" + exc.getMessage());
+        }
+        
+        if (rs != null && !rs.isExhausted()){
+            for (Row row : rs) {
+               String name = row.getString("followee");
+               followees.add(name);
+            }
+        }
+            
+        return followees;
+    }
+    
     public boolean RegisterUser(String fName, String surname, String email, String username, String Password){
         AeSimpleSHA1 sha1handler=  new AeSimpleSHA1();
         String EncodedPassword=null;
@@ -311,6 +390,81 @@ public class User {
         }
         
         return toReturn;
+    }
+    
+    public ArrayList<Pic> getFeedItems(String user, ArrayList<String> followees){
+        ArrayList<Pic> pictures = new ArrayList<Pic>();
+        ArrayList<Pic> picturesToReturn = new ArrayList<Pic>();
+                
+        Session session = cluster.connect("instagrAndrew");
+        
+        if(followees.size() > 0){
+            
+            String output = " WHERE user IN(";
+        
+        
+            for(int i = 0; i < followees.size(); i++){
+                output += "'" + followees.get(i) + "', ";
+            }
+
+            output = output.substring(0, output.length()-2);
+
+            String statement = "select * from userpiclist" + output + ");";
+
+            
+            PreparedStatement ps = session.prepare(statement);
+            
+            ResultSet rs = null;
+            BoundStatement boundStatement = new BoundStatement(ps);
+            
+            rs = session.execute(boundStatement);
+            if (rs.isExhausted()) {
+                System.out.println("No Images returned");
+                return new ArrayList<Pic>();
+            } else {
+                for (Row row : rs) {
+                    
+                    
+                    String username = row.getString("user");
+                    UUID imageID = row.getUUID("picid");
+                    Date origDate = row.getDate("pic_added");
+                    long time = origDate.getTime();
+                    Timestamp date = new Timestamp(time);
+                    String hashtag = row.getString("hashtag");
+                    
+                    Pic p = new Pic();
+                    p.setUUID(imageID);
+                    p.setHashtag(hashtag);
+                    p.setUser(username);
+                    p.setDate(date);
+                    pictures.add(p);
+
+                }
+            }
+            
+            //sort images by date
+            
+            while(picturesToReturn.size() < 20 && pictures.size() > 0){
+                
+                Timestamp currHighest = pictures.get(0).getDate();
+                System.out.println("TIMESTAMP: " + currHighest);
+                
+                int mostRecentIndex = 0;
+                for(int i = 1; i < pictures.size(); i++){
+                    Timestamp current = pictures.get(i).getDate();
+                    if(current.after(currHighest)){
+                        currHighest = current;
+                        mostRecentIndex = i;
+                    }
+                }
+                
+                picturesToReturn.add(pictures.get(mostRecentIndex));
+                pictures.remove(mostRecentIndex);
+                
+            }
+            
+        }
+        return picturesToReturn;
     }
     
 }

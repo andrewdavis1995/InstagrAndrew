@@ -8,6 +8,7 @@ package uk.ac.dundee.computing.aec.instagrAndrew.servlets;
 import com.datastax.driver.core.Cluster;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.UUID;
@@ -51,48 +52,63 @@ public class Profile extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
-        String username = request.getParameter("username");
         
-        if(username == null){
-            try{
-                username = (String)request.getAttribute("username");
-            }catch(Exception aa){
-                RequestDispatcher rd = request.getRequestDispatcher("/404.jsp");
-                rd.forward(request, response);
+        try{
+            String username = request.getParameter("username");
+        
+            if(username == null){
+                try{
+                    username = (String)request.getAttribute("username");
+                }catch(Exception aa){
+                    RequestDispatcher rd = request.getRequestDispatcher("/InstagrAndrew/404.jsp");
+                    rd.forward(request, response);
+                }
             }
+
+
+            System.out.println("User: " + username);
+
+
+            User us = new User();
+            us.setCluster(cluster);
+            UserDetails userDetails = us.getProfileInfo(username, false);
+
+            String name = userDetails.getName();
+            UUID profPic = userDetails.getProfilePic();
+            String user = userDetails.getUsername();
+            Set<String> email = userDetails.getEmail();
+
+
+            request.setAttribute("EmailAddress", email);
+            request.setAttribute("Full_Name", name);
+            request.setAttribute("search", user);
+            request.setAttribute("ProfilePic", profPic);
+
+            ArrayList<String> followers = us.getFollowers(username);
+            ArrayList<String> followees = us.getFollowees(username);
+
+
+            request.setAttribute("followers", followers);
+            request.setAttribute("followees", followees);
+
+
+
+            PicModel p = new PicModel();
+            p.setCluster(cluster);
+            java.util.LinkedList<Pic> pictures = p.getPicsForUser(user);
+            request.setAttribute("Pics", pictures);
+
+
+
+            RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
+            rd.forward(request, response);
+        }catch(Exception e){
+            request.setAttribute("LoggedIn", null);
+            RequestDispatcher rd = request.getRequestDispatcher("/Login.jsp");
+            rd.forward(request, response);
         }
-        
-        
-        System.out.println("User: " + username);
-        
-                
-        User us = new User();
-        us.setCluster(cluster);
-        UserDetails userDetails = us.getProfileInfo(username, false);
-        
-        String name = userDetails.getName();
-        UUID profPic = userDetails.getProfilePic();
-        String user = userDetails.getUsername();
-        Set<String> email = userDetails.getEmail();
-        
-        
-        
-        request.setAttribute("EmailAddress", email);
-        request.setAttribute("Full_Name", name);
-        request.setAttribute("search", user);
-        request.setAttribute("ProfilePic", profPic);
-        
-        PicModel p = new PicModel();
-        p.setCluster(cluster);
-        java.util.LinkedList<Pic> pictures = p.getPicsForUser(user);
-        request.setAttribute("Pics", pictures);
-        
-        
-        
-        RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
-        rd.forward(request, response);
        
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

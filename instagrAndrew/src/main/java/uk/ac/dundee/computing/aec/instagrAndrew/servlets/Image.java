@@ -113,7 +113,6 @@ public class Image extends HttpServlet {
         PicModel tm = new PicModel();
         tm.setCluster(cluster);
         java.util.LinkedList<Pic> lsPics = tm.getPicsForUser(user);
-        RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
         UUID profilePic = tm.getProfilePic(user);
         request.setAttribute("ProfilePic", profilePic);
         request.setAttribute("Pics", lsPics);
@@ -123,6 +122,7 @@ public class Image extends HttpServlet {
         //get email, first name and surname - function in the User file
         request.setAttribute("EmailAddress", deets.getEmail());
         request.setAttribute("Full_Name", deets.getName());
+        RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
         rd.forward(request, response);
     }
     

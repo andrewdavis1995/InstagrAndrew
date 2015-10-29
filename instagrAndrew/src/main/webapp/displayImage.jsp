@@ -24,6 +24,17 @@
     </head>
     
     <script>
+        
+        
+         function getHashtagName(link, imageName){
+            var hashtag = link.innerHTML;
+            var cut = hashtag.substring(1);
+            document.getElementById("searchText" + imageName).value = cut;
+            var path = "HTSearchForm" + imageName;
+
+            document.getElementById(path).submit();
+        }
+        
         function calcImage(){
             var img = document.getElementById("likeStar").src.toString();
             var path = img.substring(54);
@@ -33,7 +44,6 @@
             }else{
                 document.getElementById("type").value = "unlike";
             }
-            
         }
         
         
@@ -61,13 +71,12 @@
     </script>
     
     
-    <body style="background-color: white; margin-top: 20px">
+    <body style="background-color: #3D3B46; margin-top: 20px">
         
         <%
                 
             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
             String currentUser = lg.getUsername();
-            
             
             String path = (String)request.getAttribute("imageSource");
             ArrayList<String> likes;
@@ -112,7 +121,7 @@
         <img src ="/InstagrAndrew/Image/<%=path%>" style="width:73%; margin-left: 0; display: inline-block;">
                
         
-        <div style="display: inline-block; background-color: white; margin-left: 1%; width: 25%; vertical-align: top;">
+        <div style="display: inline-block; background-color: lightblue; margin-left: 1%; width: 25%; vertical-align: top;">
         
             <div id="likers" name="likers" style="position: absolute; width: 25%; height: 500px; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); z-index: 10; display: none">
                 <div>   <!-- title div -->  
@@ -138,23 +147,40 @@
                 </div>
                 
             </div>
-        
+                        
+            <div style="display: inline-block; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; margin-left: 1%; margin-top: 1%; margin-right: 1%; width: 98%; vertical-align: top; height: 120px;">
+                
                 <%
-                    Object profilePicture = request.getAttribute("ProfPic");
-                    if(profilePicture == null){
-                        request.setAttribute("ProfPic", null);
+                    String profilePicPath = "";
+                        
+                    try{
+                        UUID profilePicture = (UUID)request.getAttribute("ProfPic");
+                        
+                        if(profilePicture != null){
+                            profilePicPath = "/InstagrAndrew/Image/" + profilePicture;
+                        }else{
+                            profilePicPath = "developmentImages/question.png";
+                        }
+                    }catch(Exception exc){
+                        profilePicPath = "developmentImages/question.png";
                     }
                 %>
                 
-            <div style="display: inline-block; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; margin-left: 0; width: 100%; vertical-align: top; height: 120px;">
-                <img style="width:60px; height:60px; display: inline-block;" src = "/InstagrAndrew/Image/<%= request.getAttribute("ProfPic") %>">
+                <img style="width:60px; height:60px; display: inline-block;" src = "<%=profilePicPath%>">
                 <div style="margin-left: 15px; margin-top: 0; height: 100%; vertical-align: top; display: inline-block; width: calc(100%-105px); width: -webkit-calc(100% - 105px); width: -moz-calc(100% - 105px);">
-                    <h1 style="display: inline-block; color: white; height: 20px; width: 100%; vertical-align: top; margin-top: 0; margin-bottom: 0;"><%=request.getAttribute("username")%></h1>
+                    
+                    
+                    <form method="POST" action="Profile/<%=request.getAttribute("username")%>" id="usernameForm"> 
+                        <input type="hidden" name="username" value="<%=request.getAttribute("username")%>">
+                        <h2 style="display: inline-block; color: white; height: 20px; width: 100%; vertical-align: top; margin-top: 0; margin-bottom: 0;"><a href="#" onclick="document.getElementById('usernameForm').submit()"><%=request.getAttribute("username")%></a></h2>
+                    </form>
+                    
+                    
                     <h6 style="display: inline-block; color: white; height: 20px; width: 100%; vertical-align: top; margin-top: 15px; margin-bottom: 0;"><%=request.getAttribute("hashtags")%></h6>
                     <form action="Comments" method="POST">
                         <input type="hidden" value ="<%=path%>" name="imageSrc">
                         <input type="hidden" value="" id="type" name="type">
-                        <input type="hidden" value="<%=currentUser%>" name="username">
+                        <input type="hidden" value="<%=request.getAttribute("username")%>" name="username">
                         <input type="hidden" value="POST" name="whatToDo">
                         <input type="hidden" name="hashtags" id="hashtag" value="<%=request.getAttribute("hashtags")%>">
                         <input type="hidden" value="<%=request.getAttribute("ProfPic")%>" name="profPic">
@@ -163,16 +189,20 @@
                     <a id="numLikesLabel" href="#" style="color: white; display: inline-block; font-size: 0.8em" onclick="showLikes();"><%=output%></a>
                 </div>
             </div>
+                
+                <h3 style="margin-left: 15px; margin-bottom: 0; margin-top: 0">Comments:</h3>
+                
+                
             <%
                 if(request.getAttribute("comments") != null){
                     ArrayList<CommentModel> comments = (ArrayList<CommentModel>)request.getAttribute("comments");
 
                     for(int i = 0; i < comments.size(); i++){
                     %>
-                    <div style="background-image: url('/InstagrAndrew/developmentImages/otherBlue.png'); background-size: cover; height: 70px; margin-top: 0; margin-top: 10px;">
+                    <div style="background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; height: 70px; margin-left: 1%; margin-top: 1%; margin-right: 1%; width: 98%;">
                         
                         <form style="margin-top: 15px;" method="POST" action="Profile" id="UserSearch<%=comments.get(i).getUsername()%>">   
-                            <a onclick ="document.getElementById('UserSearch<%=comments.get(i).getUsername()%>').submit();" href="#" style="margin-top: 5px; color: #39335B; float: left; margin-left: 48px; width: 100%"><%=comments.get(i).getUsername()%></a>
+                            <a onclick ="document.getElementById('UserSearch<%=comments.get(i).getUsername()%>').submit();" href="#" style="margin-top: 5px; color: lightblue; float: left; margin-left: 10px; width: 100%"><%=comments.get(i).getUsername()%></a>
                             <input type="hidden" name="username" id="username" value="<%=comments.get(i).getUsername()%>">
                         </form>
                             
@@ -183,13 +213,13 @@
                     }
                 }else{
                     %>
-                    <div style="background-image: url('/InstagrAndrew/developmentImages/otherBlue.png'); background-size: cover; height: 60px; margin-top: 0; margin-top: 10px;">
-                        <h3 style="margin-top: 0;">"NO COMMENTS YET"</h3>
+                    <div style="background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; height: 60px; margin-left: 1%; margin-top: 1%; margin-right: 1%; width: 98%;">
+                        <h4 style="margin-top: 0;">"NO COMMENTS YET"</h4>
                     </div>
                     <%
                 }
             %>
-                <div style="height: 200px; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover;">
+                <div style="height: 200px; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; margin-left: 1%; margin-top: 1%; margin-right: 1%; width: 98%;">
                     <form id="commentForm" action="Comments" type="POST">
                         
                         <input type="hidden" value="comment" name="type">
@@ -204,7 +234,25 @@
                     </form>
 
                 </div>
-                        <button onclick="goHome()">GO HOME</button>
+                        
+                <button style="margin-left: 15px; margin-top: 15px; margin-bottom: 15px" onclick="goHome()">GO HOME</button>
+                
+                <% 
+                    if (lg.getUsername().equals((String)request.getAttribute("username"))){
+                        %>
+                        <form style="margin-left: 15px; margin-bottom: 15px;" action="DeleteImage" method="POST">
+                            <input type="submit" value="DELETE IMAGE">
+                            <input type="hidden" name="username" id="username" value ="<%=request.getAttribute("username")%>">
+                            <input type="hidden" name="imageID" id="username" value ="<%=request.getParameter("imageSrc")%>">
+                            <input type="hidden" value="<%=request.getParameter("dateAdded")%>" name="dateAdded">
+                        </form>
+                <%
+                    }
+                %>
+                <form action="DeleteImage" method="POST">
+                    
+                </form>
+                
         </div>
 
                         

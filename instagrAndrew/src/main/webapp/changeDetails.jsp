@@ -14,6 +14,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="myStyles.css" />      
         <title>Change Details</title>
+        
+        
+        
+        
+        
     </head>
     <body background="developmentImages/5.JPG" style = "background-position: center;">
         

@@ -42,10 +42,25 @@
                 document.getElementById("searchText" + imageName).value = cut;
                 var path = "HTSearchForm" + imageName;
                 
+                function confirmDelete() {
+                    var txt;
+                    var r = confirm("Are you sure you wish to delete your account");
+                    if (r == true) {
+                        txt = "You pressed OK!";
+                    } else {
+                        txt = "You pressed Cancel!";
+                    }
+                    document.getElementById("demo").innerHTML = txt;
+                }
+                
                 document.getElementById(path).submit();
             }
+            
+            function changeDeleteValue(){
+                document.getElementById("delete").value = "true";
+            }
 
-        </script>`
+        </script>
 
     </head>
 
@@ -53,27 +68,42 @@
       
         <%
             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
+            String currentUser = lg.getUsername(); 
 
             search = (String)request.getAttribute("search");
+            
+            
+            ArrayList<String> followers = new ArrayList();
+            ArrayList<String> followees = new ArrayList();
+            
+            try{
+                followers = (ArrayList<String>)request.getAttribute("followers");
+                followees = (ArrayList<String>)request.getAttribute("followees");
+            }catch(Exception ee){}
+            
 
         %>
 
         <nav style="top: 0">
             <ul>
                 <li><a style="font-size: 1.7em; text-decoration:none; " href="/InstagrAndrew"><b>InstagrAndrew</b></a></li>
-                <li class="nav"><a href="/InstagrAndrew/upload.jsp">Upload</a></li>
+               
+                <form style="display: inline-block; margin-left: 60px" action="/InstagrAndrew/Upload" name="uploadForm" id="uploadForm" method="POST">
+                    <input type="hidden" name="username" value="<%=currentUser%>">
+                    <a href="#" onclick="document.getElementById('uploadForm').submit();">Upload</a>
+                </form>
+                
                 <!--<li class="nav"><a href="/InstagrAndrew/Images/majed">Sample Images</a></li>-->
                 <%
                     if (lg != null) {
-                        String currentUser = lg.getUsername(); 
                         if(currentUser.equals(search)){%>
-                            <form style="display: inline-block; margin-left: 60px" action="/InstagrAndrew/UpdateProfile" name="updateDetails" id="updateDetails" method="type">
+                            <form style="display: inline-block; margin-left: 60px" action="/InstagrAndrew/UpdateProfile" name="updateDetails" id="updateDetails" method="POST">
                                 <input type="hidden" name="username" value="<%=currentUser%>">
                                 <input type="hidden" name="whatToDo" value="load">
                                 <a href="#" onclick="document.getElementById('updateDetails').submit();">Update Details</a>
                             </form>
                                 
-                            <form action="LogOut" method="POST" style = "display: inline-block; float: right; margin-right: 20px;">
+                            <form action="../LogOut" method="POST" style = "display: inline-block; float: right; margin-right: 20px;">
                                 <input type="submit" value="Log Out" style="margin-left: 30px; margin-bottom: 15px; width: 150px;"> 
                             </form>
                 <%      }
@@ -86,10 +116,30 @@
             <ul>
 
                
+               
 
                 <%
-                    if (lg != null) {
-                        String currentUser = lg.getUsername();
+                    if (lg != null) {%>
+                        <div style="height: 90px; width: 250px; float: right; margin-right: 20px; margin-top: 0; top: 0; position: absolute; left: 80%;">
+                            <%
+                            if(!currentUser.equals(search)){%>
+                                <div style="width: 60px; float: right; height: 100%;">
+                                    <br>
+                                    <form action="/InstagrAndrew/Follow" method="POST" style="display: inline-block; float: right;">
+                                        <input type="hidden" name="action" id="action" value="follow">
+                                        <input type="hidden" name="userProfile" id="hashtag" value="<%=search%>">
+                                        <input type="hidden" name="currentUser" id="hashtag" value="<%=currentUser%>">
+                                        <input type="Image" id="likeStar" width="60" height="60" style="display: inline-block">
+                                    </form>
+                                </div>
+                            <%}%>
+                            <div style="width: 190px">
+                                <br><br>
+                                <a href="#" onclick="showFollowers()" id="numFollowers" style="float: right; display: inline-block; margin-top: 0; margin-bottom: 0">Number of Followers: 0</a>
+                                <a href="#" onclick="showFollowees()" id="numFollowees" style="float: right; display: inline-block; margin-top: 0; margin-bottom: 0">Profiles Followed: 0</a>
+                            </div>
+                        </div>
+                    <%
                         if (request.getAttribute("ProfilePic") == null) { %>
                             <img id="ProfPic" src = "/InstagrAndrew/developmentImages/question.png" style="width: 90px; height: 90px; display: inline-block; position: absolute; top: 0px; left: 20px;">
                              <%
@@ -152,12 +202,12 @@
                             </script>
 
                             <input type="hidden" value="<%=search%>" name="username">
-                            <input type="submit" value="Save Changes" name="saveButton" id="saveButton" style="float: right; margin-right: 40px; display: none; width: 200px; height: 45px">
+                            <input type="submit" value="Save Changes" name="saveButton" id="saveButton" style="float: right; margin-right: 300px; margin-top: 15px; display: none; width: 200px; height: 45px">
                         </form>
 
                 <%
                     } else {
-                        String redirectURL = "InstagrAndrew/login.jsp";
+                        String redirectURL = "login.jsp";
                         response.sendRedirect(redirectURL);
                     }
                 %>
@@ -200,19 +250,23 @@
                 if (hts != null) {
                     splitHT = hts.split(",");
                     for (int i = 0; i < 3; i++) {
-                        try {%> 
-                        <form style="margin-top: 15px;" method="POST" action="/InstagrAndrew/SearchHashtag" id="HTSearchForm<%=p.getSUUID()%>">   
-                            <a href="#" onclick="getHashtagName(this, '<%=p.getSUUID()%>');" style="margin-top: 4px; color: #39335B; float: left; margin-left: 48px; width: 100%">#<%=splitHT[i]%></a>
-                            <input type="hidden" name="searchText" id="searchText<%=p.getSUUID()%>" value="">
-                        </form>
+                        try {
+                            if(i < splitHT.length){    %> 
+                        
+                                <form style="margin-top: 15px;" method="POST" action="/InstagrAndrew/SearchHashtag" id="HTSearchForm<%=p.getSUUID()%>">   
+                                    <a href="#" onclick="getHashtagName(this, '<%=p.getSUUID()%>');" style="margin-top: 4px; color: #39335B; float: left; margin-left: 48px; width: 100%">#<%=splitHT[i]%></a>
+                                    <input type="hidden" name="searchText" id="searchText<%=p.getSUUID()%>" value="">
+                                </form>
                          
-                <%
+                            <% }
                         } catch (Exception e) {
                         }
                     }
                 } else {
                 %>
-            <li><a style="margin-top: 4px; color: crimson; float: left; margin-left: 48px; width: 100%">No Hashtags</a></li> 
+                    <form style="margin-top: 15px;" method="POST" action="/InstagrAndrew/SearchHashtag" id="HTSearchForm<%=p.getSUUID()%>">   
+                        <a style="margin-top: 4px; color: crimson; float: left; margin-left: 48px; width: 100%">No Hashtags</a>
+                    </form>
                 <%
                     }
 
@@ -233,6 +287,7 @@
 
             <form method="POST" action="/InstagrAndrew/Comments">
                 <input type="hidden" name="imageSrc" id="imageSrc" value ="<%= p.getSUUID()%>">
+                <input type="hidden" name="dateAdded" id="dateAdded" value="<%=p.getDate()%>">
                 <input type="hidden" name="whatToDo" id="whatToDo" value ="read">
                 <input type="hidden" name="username" id="username" value ="<%=search%>">
                 <input type="hidden" name="hashtags" id="hashtags" value="<%=hashtagOutput%> ">
@@ -250,6 +305,40 @@
             }
         %>
 
+        
+            <div style="margin-left: 350px; top: 80px; width: 30%; height: 500px; background-color: blue;  background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; position: fixed; overflow: auto; display: none" id="followeesLabel" name="followeesLabel">
+                <button style="margin-left: 20px; margin-top: 20px; margin-bottom: 20px; width: 160px; height: 25px" onclick="hideBoth(); ">Close</button>
+                
+                <div style="width:80%; margin-left: 10%">
+                <%
+                    for(int i = 0; i < followees.size(); i++){
+                        %>
+                        <form style="margin-top: 0; margin-bottom: 0" method="POST" action="Profile" id="UserSearch<%=followees.get(i)%>">   
+                            <a onclick ="document.getElementById('UserSearch<%=followees.get(i)%>').submit();" href="#" style="margin-top: 0; margin-bottom: 0; color: white; float: left; width: 100%"><%=followees.get(i)%></a>
+                            <input type="hidden" name="username" id="username" value="<%=followees.get(i)%>">
+                        </form>
+                        <%
+                    }
+                %>
+                </div>
+            </div>
+        
+            <div style="margin-left: 350px; top: 80px; width: 30%; height: 500px; background-color: blue; background-image: url('/InstagrAndrew/developmentImages/blue.png'); background-size: cover; position: fixed; overflow: auto; display: none" id="followersLabel" name="followersLabel">
+                <button style="margin-left: 20px; margin-top: 20px; margin-bottom: 20px; width: 160px; height: 25px" onclick="hideFollowers()">Close</button>
+                
+                <div style="width:80%; margin-left: 10%">
+                <%
+                    for(int i = 0; i < followers.size(); i++){
+                        %>
+                        <form style="margin-top: 0; margin-bottom: 0" method="POST" action="Profile" id="UserSearch<%=followers.get(i)%>">   
+                            <a onclick ="document.getElementById('UserSearch<%=followers.get(i)%>').submit();" href="#" style="margin-top: 0; margin-bottom: 0; color: white; float: left; width: 100%"><%=followers.get(i)%></a>
+                            <input type="hidden" name="username" id="username" value="<%=followers.get(i)%>">
+                        </form>
+                        <%
+                    }
+                %>
+                </div>
+            </div>
         
          <script>
             
@@ -271,8 +360,81 @@
                 document.getElementById('emailAddress').innerHTML = em;
             }
             
+            
+           
+           
+            <%
+                        
+            if(followers != null){
+                if(!currentUser.equals(search)){
+                    if(followers.contains(currentUser)){
+                        %>
+                            document.getElementById("action").value = "unfollow";
+                            document.getElementById("likeStar").src = "/InstagrAndrew/developmentImages/follow_yellow.png";
+                        <%
+                    }else{
+                        %>
+                            document.getElementById("action").value = "follow";
+                            document.getElementById("likeStar").src = "/InstagrAndrew/developmentImages/follow_grey.png";
+                        <%    
+                    }
+                }
+                int numFollowers = followers.size();
+                
+                System.out.println("FOLLOWERS @ SET: " + numFollowers);
+                %>
+                    document.getElementById('numFollowers').innerHTML = "Number of Followers: <%=numFollowers%>";
+                <%
+                System.out.println("DONE @ SET: " + numFollowers);
+            }
+            
+            
+            if(followees != null){
+                
+                int numFollowees = followees.size();
+                System.out.println("FOLLOWEES @ SET: " + numFollowees);
+                
+                %>
+                    document.getElementById('numFollowees').innerHTML = "Profiles Followed: <%=numFollowees%>";
+                <%
+                System.out.println("DONE @ SET: " + numFollowees);
+            }
+            %>
+                      
+            function showFollowers(){
+                document.getElementById("followersLabel").style.display = "block";
+                hideFollowees();
+            }         
+            
+            function showFollowees(){
+                document.getElementById("followeesLabel").style.display = "block";
+                hideFollowers();
+            }         
+            function hideFollowers(){
+                document.getElementById("followersLabel").style.display = "none";
+            }
+            function hideFollowees(){
+                document.getElementById("followeesLabel").style.display = "none";
+            }
+             function hideBoth(){
+                document.getElementById("followersLabel").style.display = "none";
+                document.getElementById("followeesLabel").style.display = "none";
+            }
+            
         </script>
         
-
+        
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

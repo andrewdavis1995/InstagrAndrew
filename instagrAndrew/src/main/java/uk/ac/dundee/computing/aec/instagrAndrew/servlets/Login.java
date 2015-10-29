@@ -70,7 +70,10 @@ public class Login extends HttpServlet {
                 rd.forward(request,response);
 
             }else{
-                response.sendRedirect("../InstagrAndrew/login.jsp");
+                session.setAttribute("LoggedIn", null);
+                System.out.println("Session in servlet "+session);
+                RequestDispatcher rd=request.getRequestDispatcher("login.jsp");
+                rd.forward(request,response);
             }
         }else{
             HttpSession session=request.getSession();

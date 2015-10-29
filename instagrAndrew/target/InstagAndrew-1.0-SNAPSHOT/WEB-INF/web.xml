@@ -4,17 +4,16 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	 version="3.1">
-    <!--<session-config>
+    <session-config>
         <session-timeout>
-                    60          
+             120          
         </session-timeout>
     </session-config>
-    put this back-->
     
     <error-page>
         <!-- Missing resource -->
         <error-code>404</error-code>
-        <location>/404.jsp</location>
+        <location>/InstagrAndrew/404.jsp</location>
     </error-page>
     
     <error-page>

@@ -87,11 +87,22 @@ public class CommentModel {
     
     public boolean insertComment(UUID imageID, String username, String content){
         
-        UUID time = java.util.UUID.fromString(new com.eaio.uuid.UUID().toString());
+        System.out.println("THERE");
+        
+        //http://alvinalexander.com/java/java-timestamp-example-current-time-now
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        java.sql.Timestamp time = new java.sql.Timestamp(now.getTime());
+        
+        
+        System.out.println("THING");
         
         Session session = cluster.connect("instagrAndrew");
         PreparedStatement ps = session.prepare("insert into comments (image_id, username, content, date) Values (?,?,?,?)");
        
+        
+        System.out.println("SGFDAD");
+        
         BoundStatement boundStatement = new BoundStatement(ps);
         
         try{
@@ -101,6 +112,9 @@ public class CommentModel {
         }catch(Exception exc){
             return false;
         }
+        
+        
+        System.out.println("gthyjkl");
         
         return true;
     }

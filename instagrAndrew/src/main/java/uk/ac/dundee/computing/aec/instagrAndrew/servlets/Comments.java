@@ -66,12 +66,6 @@ public class Comments extends HttpServlet {
     public void postComment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         
-        Enumeration<String> e = request.getParameterNames();
-        
-        while (e.hasMoreElements()){
-            System.out.println(e.nextElement());
-        }
-        
         HttpSession session=request.getSession();
         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
 
@@ -81,19 +75,21 @@ public class Comments extends HttpServlet {
             
             String imageID = request.getParameter("imageSrc");
             username = lg.getUsername();   
-        
+
             UUID id = UUID.fromString(imageID);
             String content = request.getParameter("comment");
-        
-            
+
             String whatToPost = request.getParameter("whatToDo");
             String type = request.getParameter("type");
-            
-            
+
+
             if(whatToPost.equals("POST")){
                 switch (type) {
                     case "comment":
-                        cm.insertComment(id, username, content);
+                        System.out.println("HERE");
+                        if(content != ""){
+                            cm.insertComment(id, username, content);
+                        }   
                         break;
                     case "like":
                         cm.insertLike(username, id);
@@ -103,12 +99,12 @@ public class Comments extends HttpServlet {
                         break;
                 }
             }            
-            
-                       
+
+
             String hashtag = request.getParameter("hashtags");
             request.setAttribute("hashtags", hashtag);
 
-            
+
             Object PP = request.getParameter("profPic");
             try{
                 String pp = PP.toString();
@@ -117,34 +113,39 @@ public class Comments extends HttpServlet {
             }catch(Exception except){
                 request.setAttribute("ProfPic", null);
             }
-            
+
             System.out.println("THERE");
-            
+
             String path = request.getParameter("imageSrc");
             request.setAttribute("imageSource", path);
 
             System.out.println("THERE");
-            
+
             String user = request.getParameter("username");
             request.setAttribute("username", user);
-            
+
             UUID image;
             image = UUID.fromString(path);
             ArrayList<CommentModel> comments = cm.getComments(image);
             request.setAttribute("comments", comments);
-            
+
             System.out.println("THERE");
-            
+
             ArrayList<String> likes = cm.getLikes(image);
             request.setAttribute("likes", likes);
-            
+
             System.out.println("HERE");
+
+            
             
             RequestDispatcher rd=request.getRequestDispatcher("displayImage.jsp");
             rd.forward(request,response);
-            //response.sendRedirect("displayImage.jsp");
+            
         }
-        
+        else{
+            RequestDispatcher rd=request.getRequestDispatcher("/InstagrAndrew");
+            rd.forward(request,response);
+        }
        
     }
     
@@ -159,9 +160,10 @@ public class Comments extends HttpServlet {
             throws ServletException, IOException {
         
         
+            
         String user = request.getParameter("username");
         request.setAttribute("username", user);
-        
+
         String hashtag = request.getParameter("hashtags");
         request.setAttribute("hashtags", hashtag);
 
@@ -176,27 +178,28 @@ public class Comments extends HttpServlet {
             UUID profpic = us.getProfilePicture(user);
             request.setAttribute("ProfPic", profpic);            
         }
-        
+
         String path = request.getParameter("imageSrc");
         request.setAttribute("imageSource", path);
-        
-            
-        
+
+
+
         UUID image;
         image = UUID.fromString(path);
-        
-        
+
+
         ArrayList<String> likes = cm.getLikes(image);
         request.setAttribute("likes", likes);
-        
-        
+
+
         ArrayList<CommentModel> comments = cm.getComments(image);
         request.setAttribute("comments", comments);
-        
+
         request.setAttribute("username", user);
-        
+
         request.setAttribute("whatToDo", "Read");
         
+                
         RequestDispatcher rd=request.getRequestDispatcher("/displayImage.jsp");
         rd.forward(request,response);
                 
